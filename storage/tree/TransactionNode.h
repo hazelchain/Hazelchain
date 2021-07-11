@@ -2,28 +2,29 @@
 // Created by chris on 2021-06-30.
 //
 
-#ifndef FLAMECOIN_TRANSACTIONNODE_H
-#define FLAMECOIN_TRANSACTIONNODE_H
+#ifndef HAZELCHAIN_TRANSACTIONNODE_H
+#define HAZELCHAIN_TRANSACTIONNODE_H
 
 #include <cstring>
 #include <sstream>
-#include "../../lib/sha256/sha256.h"
+#include "../../libs/sha256/sha256.h"
 #include "../../Transaction.h"
 
 using namespace std;
 
 class TransactionNode {
 public:
-    string hash;
-    Transaction data;
+    string sHash;
+    Transaction tData;
     TransactionNode *left;
     TransactionNode *right;
 
-    TransactionNode(const Transaction &data);
-    TransactionNode(Transaction *data);
+    explicit TransactionNode(Transaction data);
+    explicit TransactionNode(const Transaction *data);
+    explicit TransactionNode(Transaction *data);
 
     void Hash();
 };
 
 
-#endif //FLAMECOIN_TRANSACTIONNODE_H
+#endif //HAZELCHAIN_TRANSACTIONNODE_H

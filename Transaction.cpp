@@ -13,8 +13,11 @@ Transaction::Transaction(string  payerIn, string  payeeIn, int64_t amountIn)
 Transaction::Transaction(Transaction *t)
         : Transaction{ t->payer, t->payee, t->amount } {
 }
+Transaction::Transaction(const Transaction *t)
+        : Transaction{ t->payer, t->payee, t->amount } {
+}
 
-string Transaction::to_string() const {
+string Transaction::string_dump() const {
     stringstream ss;
     ss << payer << payee << amount;
     return ss.str();

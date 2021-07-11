@@ -2,8 +2,8 @@
 // Created by chris on 2021-06-30.
 //
 
-#ifndef FLAMECOIN_TRANSACTION_H
-#define FLAMECOIN_TRANSACTION_H
+#ifndef HAZELCHAIN_TRANSACTION_H
+#define HAZELCHAIN_TRANSACTION_H
 
 #include <cstdint>
 #include <string>
@@ -14,14 +14,15 @@ class Transaction {
 public:
     Transaction(string payerIn, string payeeIn, int64_t amountIn);
     explicit Transaction(Transaction *t);
+    explicit Transaction(const Transaction *t);
 
     string payer;
     string payee;
     int64_t amount;
 
-    string to_string() const;
+    string string_dump() const;
 
 };
 
 
-#endif //FLAMECOIN_TRANSACTION_H
+#endif //HAZELCHAIN_TRANSACTION_H

@@ -2,27 +2,25 @@
 // Created by chris on 2021-06-25.
 //
 
-#ifndef FLAMECOIN_BLOCK_H
-#define FLAMECOIN_BLOCK_H
+#ifndef HAZELCHAIN_BLOCK_H
+#define HAZELCHAIN_BLOCK_H
 
 #include <cstring>
 #include "storage/tree/TransactionTree.h"
-#include "lib/json/json.hpp"
+#include "libs/json/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
 
 class Block {
 public:
-    string prevHash;
-    string stateHash;
-    string txRoot;
+    string sPrevHash;
+    string sStateHash;
+    string sTxRoot;
     TransactionTree *transactions;
 
     Block();
-    explicit Block(Transaction *tx);
-    explicit Block(vector<Transaction> tx);
-    explicit Block(TransactionTree tx);
+    explicit Block(const vector<Transaction *> &tx);
 
     string getHash();
     json toJson();
@@ -30,12 +28,12 @@ public:
     void save();
 
 private:
-    string hash_;
-    time_t time_;
+    string sHash_;
+    time_t tTime_;
 
     string hash();
 
 };
 
 
-#endif //FLAMECOIN_BLOCK_H
+#endif //HAZELCHAIN_BLOCK_H

@@ -2,17 +2,16 @@
 // Created by chris on 2021-06-30.
 //
 
-#ifndef FLAMECOIN_TRANSACTIONTREE_H
-#define FLAMECOIN_TRANSACTIONTREE_H
+#ifndef HAZELCHAIN_TRANSACTIONTREE_H
+#define HAZELCHAIN_TRANSACTIONTREE_H
 
 
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include "../../Transaction.h"
-#include "Node.h"
 #include "TransactionNode.h"
-#include "../../lib/json/json.hpp"
+#include "../../libs/json/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;
@@ -23,10 +22,10 @@ public:
 
     explicit TransactionTree(TransactionNode *node);
     explicit TransactionTree(Transaction *t);
-    explicit TransactionTree(vector<Transaction> tx);
+    explicit TransactionTree(const vector<Transaction *> &tx);
 
     void add(const Transaction &value);
-    void add(Transaction *node);
+    void add(const Transaction *node);
     void add(TransactionNode *node);
 
     vector<Transaction> getAll();
@@ -48,4 +47,4 @@ private:
 };
 
 
-#endif //FLAMECOIN_TRANSACTIONTREE_H
+#endif //HAZELCHAIN_TRANSACTIONTREE_H
