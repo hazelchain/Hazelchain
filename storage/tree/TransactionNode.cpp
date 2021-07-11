@@ -4,8 +4,6 @@
 
 #include "TransactionNode.h"
 
-#include <utility>
-
 TransactionNode::TransactionNode(Transaction data) : tData(std::move(data)) {
     this->right = nullptr;
     this->left = nullptr;

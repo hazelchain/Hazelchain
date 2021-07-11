@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+
 using namespace std;
 
 class Transaction {
@@ -20,7 +21,7 @@ public:
     string payee;
     int64_t amount;
 
-    string string_dump() const;
+    [[nodiscard]] string string_dump() const;
 
 };
 
