@@ -16,13 +16,6 @@ using namespace std;
 using namespace boost::multiprecision;
 
 namespace util {
-    template<typename T>
-    inline string toString(const T &t) {
-        std::ostringstream ss;
-        ss << t;
-        return ss.str();
-    }
-
     inline string string_of(char c, int amount) {
         stringstream ss;
         for (int i = 0; i < amount; ++i) ss << c;
@@ -77,7 +70,7 @@ namespace util {
                 new Transaction("", "justin", 100),
                 new Transaction("", "charity", 100),
         };
-        Block gen(tx);
+        Block gen(tx, 979516800);
         return gen.getHash();
     }
 }

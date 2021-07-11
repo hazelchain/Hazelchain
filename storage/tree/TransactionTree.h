@@ -20,15 +20,12 @@ struct TransactionTree {
 public:
     TransactionNode *root;
 
-    explicit TransactionTree(TransactionNode *node);
     explicit TransactionTree(Transaction *t);
     explicit TransactionTree(const vector<Transaction *> &tx);
 
     void add(const Transaction &value);
     void add(const Transaction *node);
     void add(TransactionNode *node);
-
-    vector<Transaction> getAll();
 
     void print();
     vector<string> hashVector();

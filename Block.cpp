@@ -15,6 +15,11 @@ Block::Block(const vector<Transaction *> &tx) {
     transactions = new TransactionTree(tx);
     sTxRoot = transactions->root->sHash;
 }
+Block::Block(const vector<Transaction *> &tx, time_t t) {
+    tTime_ = t;
+    transactions = new TransactionTree(tx);
+    sTxRoot = transactions->root->sHash;
+}
 
 void Block::add(Transaction *t) {
     if (transactions == nullptr) transactions = new TransactionTree(t);

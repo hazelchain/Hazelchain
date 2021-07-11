@@ -5,10 +5,6 @@
 #include "TransactionTree.h"
 #include "../../util.h"
 
-TransactionTree::TransactionTree(TransactionNode *node) {
-    root = node;
-    hash();
-}
 TransactionTree::TransactionTree(Transaction *t) {
     root = new TransactionNode(t);
     hash();
@@ -80,23 +76,6 @@ vector<string> TransactionTree::hashVector(TransactionNode *node) {
     if (node->right) {
         vector<string> l = hashVector(node->right);
         out.insert(out.end(), l.begin(), l.end());
-    }
-    return out;
-}
-
-vector<Transaction> TransactionTree::getAll() {
-    return getAll(root);
-}
-vector<Transaction> TransactionTree::getAll(TransactionNode *node) {
-    vector<Transaction> out;
-    out.push_back(node->tData);
-    if (node->left) {
-        vector<Transaction> p = getAll(node->left);
-        out.insert(out.end(), p.begin(), p.end());
-    }
-    if (node->right) {
-        vector<Transaction> p = getAll(node->right);
-        out.insert(out.end(), p.begin(), p.end());
     }
     return out;
 }

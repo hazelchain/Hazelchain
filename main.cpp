@@ -1,16 +1,14 @@
 
 #include <iostream>
-#include <dirent.h>
 #include <sys/stat.h>
 #include "libs/json/json.hpp"
 #include "Block.h"
-#include "storage/tree/TransactionTree.h"
 #include "util.h"
 
 using namespace std;
 using json = nlohmann::json;
 
-void sync();
+
 void setupDirectories();
 void generateDir(const char *name);
 int findNodes();
@@ -50,11 +48,15 @@ void setupDirectories() {
 }
 
 /**
- * Generates a directory based on the name given if the stated direcotry does not exist.
+ * Generates a directory based on the name given if the stated directory does not exist.
  * @param name The name of the directory
  */
 void generateDir(const char *name) {
-    if (!util::exists(name) && mkdir(name, 0) != 0) {
-        cout << "ERROR-> could not create folder \"" << name << '\"' << endl;
+    if (!util::exists(name)) {
+        if (mkdir(name, 0) != 0) {
+            cout << "ERROR-> could not create folder \"" << name << '\"' << endl;
+        }
+    } else {
+        cout << "NOTICE-> directory \"" << name << "\" already exists" << endl;
     }
 }
