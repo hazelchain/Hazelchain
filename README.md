@@ -14,7 +14,7 @@ A sick crypto that is simple to use and easy to understand whilst having a ton o
 
 Goals that were taken into consideration when developing Hazelchain, were that we wanted this to be a simple to use and easy to understand cryptocurrency. Other goals was that we also wanted was for it to have as many important features as possible before its launch, as well as have it capable of getting more features easily.
 
-Hazelchain is a cryptocurrency built to be light and minimize its environmental footprint by initially using a [proof of work](https://www.investopedia.com/terms/p/proof-work.asp) algorithm to initially distribute coins, then later switching to using a [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp) consensus algorithm to make collecting coins more fair.
+Hazelchain is a cryptocurrency built to distribute a bulk of coins initially by using a standard [proof of work](https://www.investopedia.com/terms/p/proof-work.asp) algorithm, then later switches to using a [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp) consensus algorithm to make collecting coins more fair.
 
 ---
 
