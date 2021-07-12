@@ -73,6 +73,31 @@ namespace util {
         Block gen(tx, 979516800);
         return gen.getHash();
     }
+
+    inline bool contains(const char *str, const char *word) {
+        size_t sl = strlen(str), wl = strlen(word);
+        size_t i = 0;
+        do {
+            int total = 0;
+            for (int j = 0; j < wl; ++j) {
+                if (str[i + j] == word[j]) ++total;
+            }
+            if (total == wl) {
+                return true;
+            }
+        } while ((i += 1) < sl - wl);
+        return false;
+    }
+    inline bool contains(const initializer_list<char *> &arr, const char *find) {
+        return any_of(arr.begin(), arr.end(), [find](char *x) {
+            return contains(x, find);
+        });
+    }
+    inline bool contains(int size, char **arr, const char *find) {
+        return any_of(arr, arr + size, [find](char *x) {
+            return contains(x, find);
+        });
+    }
 }
 
 #endif //HAZELCHAIN_UTIL_H

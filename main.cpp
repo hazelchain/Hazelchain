@@ -16,7 +16,7 @@ int findNodes();
 vector<Block> chain;
 
 int main(int argc, char **argv) {
-    sync();
+    if (!util::contains(argc, argv, "-nosync")) sync();
 
     return 0;
 }
