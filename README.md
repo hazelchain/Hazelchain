@@ -3,7 +3,7 @@
 A sick crypto that is simple to use and easy to understand whilst having a ton of functionality.
 
 ###Table of contents
-1. [Design Goals](#Design_Goals)
+1. [Design Goals](#Design-Goals)
 2. [Running](#Running)
 
 
