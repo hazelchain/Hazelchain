@@ -12,10 +12,13 @@ using json = nlohmann::json;
 void setupDirectories();
 void generateDir(const char *name);
 int findNodes();
+void loadSettings();
 
 vector<Block> chain;
+json settings;
 
 int main(int argc, char **argv) {
+    loadSettings();
     if (!util::contains(argc, argv, "-nosync")) sync();
 
     return 0;
@@ -25,13 +28,13 @@ int main(int argc, char **argv) {
  * Synchronises this node and it's data to other nodes and their data
  */
 void sync() {
-    cout << "STATUS-> Generating directories if they don't exist" << endl;
+    cout << "SYNC-> Generating directories if they don't exist" << endl;
     setupDirectories();
-    cout << "STATUS-> Indexing and checking blocks" << endl;
+    cout << "SYNC-> Indexing and checking blocks" << endl;
     string genesis = util::generateGenesisHash();
-    cout << "NOTICE-> Genesis block hash: " << genesis << endl;
-    cout << "STATUS-> syncing to other nodes" << endl;
-    cout << "STATUS-> connected to " << findNodes() << " nodes" << endl;
+    cout << "SYNC-> Genesis block hash: " << genesis << endl;
+    cout << "SYNC-> syncing to other nodes" << endl;
+    cout << "SYNC-> connected to " << findNodes() << " nodes" << endl;
 
 
     //TODO: implement syncing database to other nodes;
@@ -59,4 +62,8 @@ void generateDir(const char *name) {
     } else {
         cout << "NOTICE-> directory \"" << name << "\" already exists" << endl;
     }
+}
+
+void loadSettings() {
+    settings["ip"] = util::getIp();
 }
