@@ -5,14 +5,16 @@ set(CMAKE_CXX_STANDARD 17)
 set(Boost_INCLUDE_DIR ../libraries/boost_1_76_0)
 
 add_executable(Hazelchain
-        main.cpp
-        libs/sha256/sha256.cpp libs/sha256/sha256.h
-        Block.cpp Block.h
-        util/util.h
-        storage/tree/TransactionTree.cpp storage/tree/TransactionTree.h
-        Transaction.cpp Transaction.h
-        storage/tree/TransactionNode.cpp storage/tree/TransactionNode.h
-        storage/logging/Logger.cpp storage/logging/Logger.h util/strutil.h)
+        src/main.cpp
+        src/libs/sha256/sha256.cpp src/libs/sha256/sha256.h
+        src/Block.cpp src/Block.h
+        src/util/util.h
+        src/util/strutil.h
+        src/storage/tree/TransactionTree.cpp src/storage/tree/TransactionTree.h
+        src/Transaction.cpp src/Transaction.h
+        src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
+        src/storage/logging/Logger.cpp src/storage/logging/Logger.h
+        )
 
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 find_package(Boost REQUIRED)

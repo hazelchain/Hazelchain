@@ -1,5 +1,4 @@
 
-#include <iostream>
 #include <sys/stat.h>
 #include "libs/json/json.hpp"
 #include "Block.h"
@@ -9,7 +8,6 @@
 using namespace std;
 using json = nlohmann::json;
 
-
 void setupDirectories();
 void generateDir(const char *name);
 int findNodes();
@@ -17,10 +15,11 @@ void loadSettings();
 
 vector<Block> chain;
 json settings;
-static Logger *logger = new Logger(util::concat(util::currentTime("[%d-%m-%y  %H:%M:%S] "), "-log.txt"));
+static Logger *logger;
 
 int main(int argc, char **argv) {
     loadSettings();
+    logger = new Logger(util::concat(util::currentTime("[%d-%m-%y  %H:%M:%S] "), "-log.txt"));
     if (util::contains(argc, argv, "-nolog")) logger->bLog = false;
     if (util::contains(argc, argv, "-noshow")) logger->bShow = false;
     if (!util::contains(argc, argv, "-nosync")) sync();
@@ -70,4 +69,5 @@ void generateDir(const char *name) {
 
 void loadSettings() {
     settings["ip"] = util::getIp();
+//    settings["connected"] = false;
 }
