@@ -1,36 +1,30 @@
 //
-// Created by chris on 2021-06-28.
+// Created by chris on 2021-07-16.
 //
 
-#ifndef HAZELCHAIN_UTIL_H
-#define HAZELCHAIN_UTIL_H
+#ifndef HAZELCHAIN_STRUTIL_H
+#define HAZELCHAIN_STRUTIL_H
 
-#include <bits/stdc++.h>
 #include <boost/multiprecision/cpp_int.hpp>
-#include <dirent.h>
-#include "Transaction.h"
-#include "storage/tree/TransactionTree.h"
-#include "Block.h"
-#include "libs/httpRequests/http.hpp"
 
 using namespace std;
 using namespace boost::multiprecision;
+using namespace boost;
 
 namespace util {
     inline string string_of(char c, int amount);
     inline string reverse(string in);
     inline uint1024_t stringToInt(const string &in);
+    template<class T> inline string to_string(const T &in);
     inline bool isGreaterThan(const string &a, const string &b);
     inline const char *concat(const char *a, const char *b);
-    inline bool exists(const char *in);
-    inline string generateGenesisHash();
+    inline string concat(const string &a, const string &b);
+    inline string concat(initializer_list<string> in);
     inline bool contains(const char *str, const char *word);
     inline bool contains(const initializer_list<char *> &arr, const char *find);
+    inline bool contains(int size, char **arr, const char *find);
     template<class T> inline string vectorToString(vector<T> in);
-    inline string getIp();
-    namespace req {
-        inline http::Response get(const char *ip);
-    }
+
 
     inline string string_of(char c, int amount) {
         stringstream ss;
@@ -52,6 +46,12 @@ namespace util {
         return out;
     }
 
+    template<class T> inline string to_string(const T &in) {
+        stringstream ss;
+        ss << in;
+        return ss.str();
+    }
+
     inline bool isGreaterThan(const string &a, const string &b) {
         if (a.size() > b.size()) return true;
         if (a.size() < b.size()) return false;
@@ -70,24 +70,20 @@ namespace util {
         return result;
     }
 
-    inline bool exists(const char *in) {
-        DIR *t = opendir(in);
-        if (!t) {
-            closedir(t);
-            return false;
-        }
-        closedir(t);
-        return true;
+    inline string concat(const string &a, const string &b) {
+        stringstream ss;
+        ss << a << b;
+        return ss.str();
     }
 
-    inline string generateGenesisHash() {
-        vector<Transaction *> tx{
-                new Transaction("", "christian", 100),
-                new Transaction("", "justin", 100),
-                new Transaction("", "charity", 100),
-        };
-        Block gen(tx, 979516800);
-        return gen.getHash();
+    inline string concat(initializer_list<string> in) {
+        stringstream ss;
+
+        for (string p : in) {
+            ss << p;
+        }
+
+        return ss.str();
     }
 
     inline bool contains(const char *str, const char *word) {
@@ -118,19 +114,6 @@ namespace util {
     template<class T> inline string vectorToString(vector<T> in) {
         return string{in.begin(), in.end()};
     }
-
-    inline string getIp() {
-        string out = vectorToString<uint8_t>(req::get("http://api.ipify.org").body);
-        return out;
-    }
-
-    namespace req {
-        inline http::Response get(const char *ip) {
-            http::Request req{ip};
-            const auto response = req.send("GET");
-            return response;
-        }
-    }
 }
 
-#endif //HAZELCHAIN_UTIL_H
+#endif //HAZELCHAIN_STRUTIL_H

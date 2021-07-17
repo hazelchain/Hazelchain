@@ -8,11 +8,11 @@ add_executable(Hazelchain
         main.cpp
         libs/sha256/sha256.cpp libs/sha256/sha256.h
         Block.cpp Block.h
-        util.h
+        util/util.h
         storage/tree/TransactionTree.cpp storage/tree/TransactionTree.h
         Transaction.cpp Transaction.h
         storage/tree/TransactionNode.cpp storage/tree/TransactionNode.h
-        )
+        storage/logging/Logger.cpp storage/logging/Logger.h util/strutil.h)
 
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 find_package(Boost REQUIRED)

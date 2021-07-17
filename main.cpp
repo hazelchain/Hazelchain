@@ -3,7 +3,8 @@
 #include <sys/stat.h>
 #include "libs/json/json.hpp"
 #include "Block.h"
-#include "util.h"
+#include "util/util.h"
+#include "storage/logging/Logger.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -16,9 +17,12 @@ void loadSettings();
 
 vector<Block> chain;
 json settings;
+static Logger *logger = new Logger(util::concat(util::currentTime("[%d-%m-%y  %H:%M:%S] "), "-log.txt"));
 
 int main(int argc, char **argv) {
     loadSettings();
+    if (util::contains(argc, argv, "-nolog")) logger->bLog = false;
+    if (util::contains(argc, argv, "-noshow")) logger->bShow = false;
     if (!util::contains(argc, argv, "-nosync")) sync();
 
     return 0;
@@ -28,13 +32,13 @@ int main(int argc, char **argv) {
  * Synchronises this node and it's data to other nodes and their data
  */
 void sync() {
-    cout << "SYNC-> Generating directories if they don't exist" << endl;
+    logger->log("Generating directories if they don't exist");
     setupDirectories();
-    cout << "SYNC-> Indexing and checking blocks" << endl;
+    logger->log("Indexing and checking blocks");
     string genesis = util::generateGenesisHash();
-    cout << "SYNC-> Genesis block hash: " << genesis << endl;
-    cout << "SYNC-> syncing to other nodes" << endl;
-    cout << "SYNC-> connected to " << findNodes() << " nodes" << endl;
+    logger->log({"Genesis block hash: ", genesis});
+    logger->log("syncing to other nodes");
+    logger->log({"connected to ", util::to_string<int>(findNodes()), " other nodes"});
 
 
     //TODO: implement syncing database to other nodes;
@@ -57,10 +61,10 @@ void setupDirectories() {
 void generateDir(const char *name) {
     if (!util::exists(name)) {
         if (mkdir(name, 0) != 0) {
-            cout << "ERROR-> could not create folder \"" << name << '\"' << endl;
+            logger->log({"Could not create folder \"", name, "\""});
         }
     } else {
-        cout << "NOTICE-> directory \"" << name << "\" already exists" << endl;
+        logger->log({"Directory \"", name, "\" already exists"});
     }
 }
 

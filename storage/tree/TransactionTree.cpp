@@ -3,7 +3,7 @@
 //
 
 #include "TransactionTree.h"
-#include "../../util.h"
+#include "../../util/util.h"
 
 TransactionTree::TransactionTree(Transaction *t) {
     root = new TransactionNode(t);
