@@ -48,7 +48,8 @@ namespace util {
     }
 
     inline string getIp() {
-        string out = vectorToString<uint8_t>(req::get("http://api.ipify.org").body);
+        string out = vectorToString<uint8_t>(
+                req::get("http://api.ipify.org").body);
         return out;
     }
 

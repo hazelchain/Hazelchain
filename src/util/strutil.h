@@ -24,6 +24,9 @@ namespace util {
     inline bool contains(const initializer_list<char *> &arr, const char *find);
     inline bool contains(int size, char **arr, const char *find);
     template<class T> inline string vectorToString(vector<T> in);
+    inline string replace(string in, const string &a, const string &b);
+    inline vector<string> split(const string &in, const char a);
+    inline int count_of(const string &in, const char a);
 
 
     inline string string_of(char c, int amount) {
@@ -33,7 +36,8 @@ namespace util {
     }
 
     inline string reverse(string in) {
-        for (auto [i, n] = tuple(0, in.length()); i < n / 2; ++i) swap(in[i], in[n - i - 1]);
+        for (auto [i, n] = tuple(0, in.length()); i < n / 2; ++i)
+            swap(in[i], in[n - i - 1]);
         return in;
     }
 
@@ -100,7 +104,8 @@ namespace util {
         } while ((i += 1) < sl - wl);
         return false;
     }
-    inline bool contains(const initializer_list<char *> &arr, const char *find) {
+    inline bool contains(const initializer_list<char *> &arr,
+                         const char *find) {
         return any_of(arr.begin(), arr.end(), [find](char *x) {
             return contains(x, find);
         });
@@ -113,6 +118,44 @@ namespace util {
 
     template<class T> inline string vectorToString(vector<T> in) {
         return string{in.begin(), in.end()};
+    }
+
+    inline string replace(string in, const string &a, const string &b) {
+        for (int i = 0; i < (in.size() - a.size()); i++) {
+            if (in.substr(i, a.size()) == a) {
+                stringstream ss;
+                ss << in.substr(0, i) << b << in.substr(i + a.size(),
+                                                          in.size());
+                in = ss.str();
+            }
+        }
+        return in;
+    }
+
+    inline vector<string> split(const string &in, const char a) {
+        vector<string> out;
+        string left = in;
+        int total = count_of(in, a);
+        for (int i = 0; i < total; ++i) {
+            for (int j = 0; j < left.size(); ++j) {
+                if (left.at(j) == a) {
+                    out.push_back(left.substr(0, j));
+                    left = left.substr(j + 1);
+                    break;
+                }
+            }
+            if (i == (total - 1)) {
+                out.push_back(left);
+                break;
+            }
+        }
+        return out;
+    }
+
+    inline int count_of(const string &in, const char a) {
+        int t = 0;
+        for (int i = 0; i < in.size(); ++i) if (in.at(i) == a) ++t;
+        return t;
     }
 }
 

@@ -3,6 +3,7 @@
 #include "libs/json/json.hpp"
 #include "Block.h"
 #include "util/util.h"
+#include "util/confutil.h"
 #include "storage/logging/Logger.h"
 
 using namespace std;
@@ -34,8 +35,7 @@ void sync() {
     logger->log("Generating directories if they don't exist");
     setupDirectories();
     logger->log("Indexing and checking blocks");
-    string genesis = util::generateGenesisHash();
-    logger->log({"Genesis block hash: ", genesis});
+    logger->log({"Genesis block hash: ", settings["genesis_hash"]});
     logger->log("syncing to other nodes");
     logger->log({"connected to ", util::to_string<int>(findNodes()), " other nodes"});
 
@@ -70,4 +70,16 @@ void generateDir(const char *name) {
 void loadSettings() {
     settings["ip"] = util::getIp();
 //    settings["connected"] = false;
+    if (!util::exists("settings.json")) {
+        json j = {
+                {"server_port", 10541},
+                {"test_port", 10542},
+                {"api_port", 10543},
+                {"genesis_hash", util::generateGenesisHash()}
+        };
+        ofstream o("settings.json");
+        o << j;
+        o.close();
+    }
+    settings = util::parseConf("settings.conf");
 }

@@ -7,7 +7,8 @@
 #include <sstream>
 
 Transaction::Transaction(string  payerIn, string  payeeIn, int64_t amountIn)
-        : payer(std::move(payerIn)), payee(std::move(payeeIn)), amount(amountIn) {
+        : payer(std::move(payerIn)), payee(std::move(payeeIn)),
+                amount(amountIn) {
 }
 
 Transaction::Transaction(Transaction *t)

@@ -14,7 +14,7 @@ add_executable(Hazelchain
         src/Transaction.cpp src/Transaction.h
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
-        )
+        src/util/confutil.h)
 
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 find_package(Boost REQUIRED)
