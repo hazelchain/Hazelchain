@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16.3)
 project(Hazelchain)
 
 set(CMAKE_CXX_STANDARD 17)
-set(Boost_INCLUDE_DIR ../libraries/boost_1_76_0)
+set(Boost_INCLUDE_DIR src/libs/boost)
 
 add_executable(Hazelchain
         src/main.cpp
@@ -14,7 +14,8 @@ add_executable(Hazelchain
         src/Transaction.cpp src/Transaction.h
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
-        src/util/confutil.h)
+#        src/node/client.h src/node/server.h
+        )
 
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 find_package(Boost REQUIRED)

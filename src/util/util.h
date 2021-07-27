@@ -22,6 +22,7 @@ namespace util {
     inline string generateGenesisHash();
     inline string getIp();
     inline string currentTime(const char *fmt);
+    inline bool contains(map<string, string> in, const string &key);
 
     namespace req {
         inline http::Response get(const char *ip);
@@ -59,6 +60,13 @@ namespace util {
         strftime(buffer, sizeof(buffer), fmt, localtime(&t));
 //        buffer[255] = '\0';
         return buffer;
+    }
+
+    inline bool contains(map<string, string> in, const string &key) {
+        for (map<string, string>::iterator i = in.begin(); i != in.end(); ++i) {
+            if (i->first == key) return true;
+        }
+        return false;
     }
 
     namespace req {

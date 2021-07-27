@@ -2,9 +2,8 @@
 #include <sys/stat.h>
 #include "libs/json/json.hpp"
 #include "Block.h"
-#include "util/util.h"
-#include "util/confutil.h"
 #include "storage/logging/Logger.h"
+#include "util/util.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -68,18 +67,20 @@ void generateDir(const char *name) {
 }
 
 void loadSettings() {
-    settings["ip"] = util::getIp();
-//    settings["connected"] = false;
-    if (!util::exists("settings.json")) {
-        json j = {
-                {"server_port", 10541},
-                {"test_port", 10542},
-                {"api_port", 10543},
-                {"genesis_hash", util::generateGenesisHash()}
-        };
-        ofstream o("settings.json");
-        o << j;
-        o.close();
+    ifstream ifs("settings.json");
+    if (ifs.good()) {
+        settings = json::parse(ifs);
+        return;
     }
-    settings = util::parseConf("settings.conf");
+    settings = {
+            {"ip", util::getIp()},
+            {"server_port", 10541},
+            {"test_port", 10542},
+            {"api_port", 10543},
+            {"genesis_hash", util::generateGenesisHash()},
+            {"nodes", -1}
+    };
+    ofstream o("settings.json");
+    o << settings;
+    o.close();
 }
