@@ -193,7 +193,7 @@ MANIFEST
 *.spec
 
 # Installer logs
-pip-log.txt
+pip-logger.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
@@ -216,7 +216,7 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
+*.logger
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -288,10 +288,10 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
-# Pyre type checker
+# Pyre level checker
 .pyre/
 
-# pytype static type analyzer
+# pytype static level analyzer
 .pytype/
 
 # Cython debug symbols

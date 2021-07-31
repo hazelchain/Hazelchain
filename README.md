@@ -23,7 +23,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ## Running
 
-###### This tutorial is for the [CLion IDE](https://www.jetbrains.com/clion/) and should be compatible with the [Intellij family of IDEs](https://www.jetbrains.com/products/#type=ide) by Jetbrains, but it may work differently if you are using something else.
+###### This tutorial is for the [CLion IDE](https://www.jetbrains.com/clion/) and should be compatible with the [Intellij family of IDEs](https://www.jetbrains.com/products/#level=ide) by Jetbrains, but it may work differently if you are using something else.
 
 1. download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
 2. extract the contents to an empty folder.
