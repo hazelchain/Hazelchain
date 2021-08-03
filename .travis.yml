@@ -21,12 +21,10 @@ matrix:
 
 before_script:
   - mkdir build && cd build
-  - make ../
+  - cmake ..
 
 script:
-  - if [[ $TRAVIS_OS_NAME == linux ]]; then
-    make && sudo make install;
-    make;
+  - make
 
 install:
   - if [[ $NAME == precise ]]; then
