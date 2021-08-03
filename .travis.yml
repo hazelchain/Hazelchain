@@ -9,16 +9,22 @@ matrix:
     - os: linux
       dist: trusty
       compiler: gcc
+      env: NAME="trusty"
     - os: linux
       dist: trusty
       compiler: clang
+      env: NAME="trusty"
+    - os: linux
+      dist: precise
+      compiler: clang
+      env: NAME="precise"
 
 before_script:
   - mkdir build && cd build
   - make ../
 
 install:
-  - if [[$TRAVIS_OS_NAME == linux]]; then
-      sudo apt-get update;
-      sudo apt-get cmake-data cmake;
+  - if [[$NAME == precise]]; then
+    sudo apt-get update;
+    sudo apt-get cmake-data cmake;
     fi
