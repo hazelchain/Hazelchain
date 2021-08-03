@@ -13,6 +13,12 @@ matrix:
       dist: trusty
       compiler: clang
 
-#compiler:
-#  - clang
-#  - gcc
+before_script:
+  - mkdir build && cd build
+  - make ../
+
+install:
+  - if [[$TRAVIS_OS_NAME == linux]]; then
+      sudo apt-get update;
+      sudo apt-get cmake-data cmake;
+    fi
