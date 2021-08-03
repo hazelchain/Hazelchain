@@ -3,6 +3,7 @@
 //
 
 #include "TransactionTree.h"
+#include <sha256.h>
 #include "../../util/util.h"
 
 TransactionTree::TransactionTree(Transaction *t) {

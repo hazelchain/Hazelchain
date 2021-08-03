@@ -36,7 +36,7 @@ namespace util {
     }
 
     inline string reverse(string in) {
-        for (auto [i, n] = tuple(0, in.length()); i < n / 2; ++i)
+        for (auto [i, n] = tuple<size_t, size_t>(0, in.length()); i < n / 2; ++i)
             swap(in[i], in[n - i - 1]);
         return in;
     }
@@ -83,7 +83,7 @@ namespace util {
     inline string concat(initializer_list<string> in) {
         stringstream ss;
 
-        for (string p : in) {
+        for (const string& p : in) {
             ss << p;
         }
 

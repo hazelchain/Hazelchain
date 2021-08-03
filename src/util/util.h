@@ -10,19 +10,21 @@
 #include "../Transaction.h"
 #include "../storage/tree/TransactionTree.h"
 #include "../Block.h"
-#include "../libs/httpRequests/http.hpp"
+#include "../Http.h"
 #include "strutil.h"
 
 using namespace std;
-using namespace boost::multiprecision;
-using namespace boost;
 
 namespace util {
     inline bool exists(const char *in);
+
     inline string generateGenesisHash();
+
     inline string getIp();
+
     inline string currentTime(const char *fmt);
-    inline bool contains(map<string, string> in, const string &key);
+
+    inline bool contains(const map<string, string> &in, const string &key);
 
     namespace req {
         inline http::Response get(const char *ip);
@@ -50,7 +52,8 @@ namespace util {
 
     inline string getIp() {
         string out = vectorToString<uint8_t>(
-                req::get("http://api.ipify.org").body);
+                req::get("http://api.ipify.org").body
+        );
         return out;
     }
 
@@ -62,18 +65,16 @@ namespace util {
         return buffer;
     }
 
-    inline bool contains(map<string, string> in, const string &key) {
-        for (map<string, string>::iterator i = in.begin(); i != in.end(); ++i) {
-            if (i->first == key) return true;
+    inline bool contains(const map<string, string> &in, const string &key) {
+        for (auto &i : in) {
+            if (i.first == key) return true;
         }
         return false;
     }
 
     namespace req {
         inline http::Response get(const char *ip) {
-            http::Request req{ip};
-            const auto response = req.send("GET");
-            return response;
+            return http::get(ip);
         }
     }
 }

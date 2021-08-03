@@ -21,7 +21,7 @@ public:
     string payee;
     int64_t amount;
 
-    [[nodiscard]] string string_dump() const;
+    string string_dump() const;
 
 };
 

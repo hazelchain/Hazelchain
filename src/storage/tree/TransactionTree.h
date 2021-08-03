@@ -11,7 +11,7 @@
 #include <fstream>
 #include "../../Transaction.h"
 #include "TransactionNode.h"
-#include "../../libs/json/json.hpp"
+#include <json.hpp>
 
 using namespace std;
 using json = nlohmann::json;

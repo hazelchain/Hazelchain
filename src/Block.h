@@ -6,8 +6,8 @@
 #define HAZELCHAIN_BLOCK_H
 
 #include <cstring>
+#include <json.hpp>
 #include "storage/tree/TransactionTree.h"
-#include "libs/json/json.hpp"
 
 using namespace std;
 using json = nlohmann::json;

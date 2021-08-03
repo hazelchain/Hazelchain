@@ -1,13 +1,19 @@
 
 #include <sys/stat.h>
-#include "libs/json/json.hpp"
+#include <json.hpp>
 #include "Block.h"
 #include "storage/logging/Logger.h"
 #include "util/util.h"
+#include "../cmake-build-debug/_deps/jsoncpp-src/single_include/nlohmann/json.hpp"
+
+#ifdef _WIN32
+#define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
+#endif // _WIN32
 
 using namespace std;
 using json = nlohmann::json;
 
+void sync();
 void setupDirectories();
 void generateDir(const char *name);
 int findNodes();
@@ -18,6 +24,9 @@ json settings;
 static Logger *logger;
 
 int main(int argc, char **argv) {
+    cout << util::vectorToString<string>(http::get("google.com").body) << endl;
+    return 0;
+
     loadSettings();
     logger = new Logger(util::concat(util::currentTime("[%d-%m-%y  %H:%M:%S] "), "-log.txt"));
     if (util::contains(argc, argv, "-nolog")) logger->bLog = false;

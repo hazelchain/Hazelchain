@@ -2,9 +2,10 @@
 // Created by chris on 2021-06-25.
 //
 
+#include "Block.h"
+#include <sha256.h>
 #include <ctime>
 #include <ostream>
-#include "Block.h"
 
 Block::Block() {
     tTime_ = time(nullptr);

@@ -3,6 +3,7 @@
 //
 
 #include "TransactionNode.h"
+#include <sha256.h>
 
 TransactionNode::TransactionNode(Transaction data) : tData(std::move(data)) {
     this->right = nullptr;

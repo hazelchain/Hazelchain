@@ -7,7 +7,6 @@
 
 #include <cstring>
 #include <sstream>
-#include "../../libs/sha256/sha256.h"
 #include "../../Transaction.h"
 
 using namespace std;

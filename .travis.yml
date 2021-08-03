@@ -1,0 +1,19 @@
+language: cpp
+
+install: make get deps
+
+include:
+  - os: windows
+    compiler: clang
+  - os: windows
+    compiler: mingw
+  - os: linux
+    dist: trusty
+    compiler: gcc
+  - os: linux
+    dist: trusty
+    compiler: clang
+
+compiler:
+  - clang
+  - gcc
