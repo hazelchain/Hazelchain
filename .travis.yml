@@ -4,8 +4,10 @@ jobs:
   include:
     - os: windows
       compiler: clang
+      env: NAME="windows"
     - os: windows
       compiler: gcc
+      env: NAME="windows"
     - os: linux
       dist: trusty
       compiler: gcc
@@ -20,8 +22,10 @@ jobs:
       env: NAME="precise"
     - os: osx
       compiler: clang
+      env: NAME="osx"
     - os: osx
       compiler: gcc
+      env: NAME="osx"
 
 before_script:
   - mkdir build && cd build
@@ -30,10 +34,10 @@ script:
   - cmake
 
 install:
-  - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
+  - if [[ $NAME = osx ]]; then
     brew update;
     fi
-  - if [[ $NAME = "precise" ]]; then
+  - if [[ $NAME = precise ]]; then
     sudo apt-get update;
     sudo apt-get cmake-data cmake;
     fi
