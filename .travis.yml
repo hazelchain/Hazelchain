@@ -31,7 +31,7 @@ before_script:
   - mkdir build && cd build
 
 script:
-  - if [[ !$NAME = windows ]]; then
+  - if [[ $NAME = trusty OR $NAME = precise OR $NAME = osx ]]; then
     cmake ../CMakeLists.txt;
     fi
   - if [[ $NAME = windows ]]; then
