@@ -4,7 +4,6 @@
 #include "Block.h"
 #include "storage/logging/Logger.h"
 #include "util/util.h"
-#include "../cmake-build-debug/_deps/jsoncpp-src/single_include/nlohmann/json.hpp"
 
 #ifdef _WIN32
 #define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
