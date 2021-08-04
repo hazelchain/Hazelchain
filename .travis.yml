@@ -20,8 +20,10 @@ matrix:
       env: NAME="precise"
 
 before_script:
-  - if [[ $NAME == precise || $NAME == trusty ]]; then
-    sudo apt-get -y install cmake
+  - if [[ $NAME == precise ]]; then
+    sudo apt-get -y install cmake;
+  - if [[ $NAME == trusty ]]; then
+    sudo apt-get -y install cmake;
 
   - mkdir build && cd build
   - cmake ..
