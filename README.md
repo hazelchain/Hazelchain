@@ -1,5 +1,3 @@
-[![Build Status](https://www.travis-ci.com/Shadow2ube/Hazelchain.svg?token=JGpFMBqzqoCFNVBXkkXh&branch=master)](https://www.travis-ci.com/Shadow2ube/Hazelchain)
-
 # Hazelchain
 
 A sick crypto that is simple to use and easy to understand whilst having a ton of functionality.
