@@ -1,6 +1,6 @@
 language: cpp
 
-matrix:
+jobs:
   include:
     - os: windows
       compiler: clang
@@ -20,9 +20,9 @@ matrix:
       env: NAME="precise"
 
 before_script:
-  - case $TRAVIS_OS_NAME in linux
+  - if [$TRAVIS_OS_NAME = linux]; then
     sudo apt-get -y install cmake
-    esac
+    fi
 
   - mkdir build && cd build
   - cmake ..
@@ -31,7 +31,7 @@ script:
   - make
 
 install:
-  - case $NAME in precise
+  - if [$NAME = precise]; then
     sudo apt-get update;
     sudo apt-get cmake-data cmake;
-    esac
+    fi
