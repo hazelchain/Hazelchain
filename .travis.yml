@@ -47,5 +47,5 @@ install:
     sudo apt-get cmake-data cmake;
     fi
   - if [[ $NAME = windows ]]; then
-    choco install cmake.install
+    choco install cmake.install;
     fi
