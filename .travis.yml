@@ -31,7 +31,12 @@ before_script:
   - mkdir build && cd build
 
 script:
-  - cmake
+  - if [[ !$NAME = windows ]]; then
+    cmake ../CMakeLists.txt;
+    fi
+  - if [[ $NAME = windows ]]; then
+    "C:/Program Files/CMake/bin/cmake" ../CMakeLists.txt
+    fi
 
 install:
   - if [[ $NAME = osx ]]; then
@@ -40,4 +45,7 @@ install:
   - if [[ $NAME = precise ]]; then
     sudo apt-get update;
     sudo apt-get cmake-data cmake;
+    fi
+  - if [[ $NAME = windows ]]; then
+    choco install cmake.install
     fi
