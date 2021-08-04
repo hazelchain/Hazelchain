@@ -18,26 +18,22 @@ jobs:
       dist: precise
       compiler: clang
       env: NAME="precise"
+    - os: osx
+      compiler: clang
+    - os: osx
+      compiler: gcc
 
 before_script:
   - mkdir build && cd build
-
-  - if [[ $TRAVIS_OS_NAME = linux ]]; then
-    sudo apt-get -y install cmake;
-    cmake ../CMakeLists.txt;
-    fi
-
-  - if [[ $TRAVIS_OS_NAME = windows ]]; then
-    choco install cmake;
-    "C:/Program Files/CMake/bin/cmake" ../CmakeLists.txt;
-    fi
-
 
 #script:
 #  - make
 
 install:
-  - if [[ $NAME = precise ]]; then
+  - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
+    brew update;
+    fi
+  - if [[ $NAME = "precise" ]]; then
     sudo apt-get update;
     sudo apt-get cmake-data cmake;
     fi
