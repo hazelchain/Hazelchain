@@ -1,3 +1,5 @@
+[![CMake](https://github.com/Shadow2ube/Hazelchain/actions/workflows/cmake.yml/badge.svg)](https://github.com/Shadow2ube/Hazelchain/actions/workflows/cmake.yml)
+
 # Hazelchain
 
 A sick crypto that is simple to use and easy to understand whilst having a ton of functionality.
