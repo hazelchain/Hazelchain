@@ -26,8 +26,8 @@ jobs:
 before_script:
   - mkdir build && cd build
 
-#script:
-#  - make
+script:
+  - cmake
 
 install:
   - if [[ $TRAVIS_OS_NAME = "osx" ]]; then
