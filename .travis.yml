@@ -31,21 +31,22 @@ before_script:
   - mkdir build && cd build
 
 script:
-  - if [[ $NAME = trusty OR $NAME = precise OR $NAME = osx ]]; then
-    cmake ../CMakeLists.txt;
+  - if [[ $NAME = "trusty" OR $NAME = "precise" OR $NAME = "osx" ]]; then
+    cmake ..;
     fi
-  - if [[ $NAME = windows ]]; then
-    "C:/Program Files/CMake/bin/cmake" ../CMakeLists.txt
+  - if [[ $NAME = "windows" ]]; then
+    "C:/Program Files/CMake/bin/cmake" ../CMakeLists.txt;
     fi
 
 install:
-  - if [[ $NAME = osx ]]; then
+  - if [[ $NAME = "osx" ]]; then
     brew update;
     fi
-  - if [[ $NAME = precise ]]; then
+  - if [[ $NAME = "precise" ]]; then
     sudo apt-get update;
     sudo apt-get cmake-data cmake;
     fi
-  - if [[ $NAME = windows ]]; then
+  - if [[ $NAME = "windows" ]]; then
     choco install cmake.install;
+    "C:/Program Files/CMake/bin/cmake.exe" --version
     fi
