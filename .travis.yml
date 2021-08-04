@@ -20,10 +20,9 @@ matrix:
       env: NAME="precise"
 
 before_script:
-  - if [[ $NAME == precise ]]; then
-    sudo apt-get -y install cmake;
-  - if [[ $NAME == trusty ]]; then
-    sudo apt-get -y install cmake;
+  - case $TRAVIS_OS_NAME in linux
+    sudo apt-get -y install cmake
+    esac
 
   - mkdir build && cd build
   - cmake ..
@@ -32,7 +31,7 @@ script:
   - make
 
 install:
-  - if [[ $NAME == precise ]]; then
+  - case $NAME in precise
     sudo apt-get update;
     sudo apt-get cmake-data cmake;
-    fi
+    esac
