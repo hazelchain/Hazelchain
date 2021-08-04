@@ -21,10 +21,10 @@ jobs:
       compiler: clang
       env: NAME="precise"
     - os: osx
-      compiler: clang
+      compiler: gcc
       env: NAME="osx"
     - os: osx
-      compiler: gcc
+      compiler: clang
       env: NAME="osx"
 
 before_script:
