@@ -22,13 +22,13 @@ jobs:
         run: sudo apt-get install libssl-dev
 
       - name: Create Build Directory
-        run: mkdir build && cd build
+        run: mkdir build
 
       - name: Configure CMake
-        run: cmake ../CMakeLists.txt -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        run: -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
       - name: Build
-        run: cmake ../CMakeLists.txt --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
   windows:
     name: Build Cmake on Windows
@@ -50,8 +50,8 @@ jobs:
       - name: Create Build Directory
         run: mkdir build
 
-      - name: Configure Cmake
-        run: CMake configure
+#      - name: Configure Cmake
+#        run: CMake configure
 
       - name: Build
         run: CMake --build build
