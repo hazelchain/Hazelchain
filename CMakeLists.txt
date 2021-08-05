@@ -1,18 +1,30 @@
-#cmake_minimum_required(VERSION 3.16.3)
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16.3)
 project(Hazelchain CXX)
 
 set(CMAKE_CXX_STANDARD 17)
-set(FETCH_ITEMS FALSE)
 
 include(FetchContent)
-include(Fetch.cmake)
 
-#fetch_repo(curl "https://github.com/curl/curl.git" "master")
-fetch_repo(curlpp_repo "https://github.com/jpbarrette/curlpp.git" "master")
-fetch_repo(boost "https://github.com/boostorg/boost.git" "master")
+message(STATUS "Downloading external dependencies... (1 of 2)")
+FetchContent_Declare(
+        cpr
+        GIT_REPOSITORY https://github.com/whoshuu/cpr.git
+        GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9
+)
+message(STATUS "Downloading external dependencies... (2 of 2")
+FetchContent_Declare(
+        boost
+        GIT_REPOSITORY https://github.com/boostorg/boost.git
+        GIT_TAG master
+        PREFIX boost
+        GIT_SUBMODULES libs/multiprecision
+)
+FetchContent_MakeAvailable(cpr boost)
 
-add_executable(${PROJECT_NAME}
+message(STATUS "Downloaded external dependencies!")
+
+add_executable(
+        ${PROJECT_NAME}
         src/main.cpp
         src/Block.cpp src/Block.h
         src/util/util.h
@@ -21,19 +33,19 @@ add_executable(${PROJECT_NAME}
         src/Transaction.cpp src/Transaction.h
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
-        src/Http.cpp src/Http.h)
+        src/util/Http.h
+)
 
-message(STATUS "including directories")
-#add_subdirectory(${curlpp_SOURCE_DIR} ${curlpp_BINARY_DIR})
-#add_subdirectory(${curlpp_SOURCE_DIR})
-#target_link_directories(${PROJECT_NAME} PUBLIC ${curlpp_SOURCE_DIR})
+message(STATUS "Including local dependencies...")
+
+target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr boost)
+
 include_directories(
-        ${boost_SOURCE_DIR}
-        ${curlpp_SOURCE_DIR}
         libs/json
         libs/sha256
         libs/sqlite
 )
-message(STATUS "included directories")
+
+message(STATUS "Included local dependencies!")
 
 message(STATUS "Complete!")

@@ -1,10 +1,10 @@
-[![CMake](https://github.com/Shadow2ube/Hazelchain/actions/workflows/cmake.yml/badge.svg)](https://github.com/Shadow2ube/Hazelchain/actions/workflows/cmake.yml)
-
 # Hazelchain
 
 A sick crypto that is simple to use and easy to understand whilst having a ton of functionality.
 
-### Table of contents
+[![CMake](https://github.com/Shadow2ube/Hazelchain/actions/workflows/cmake.yml/badge.svg)](https://github.com/Shadow2ube/Hazelchain/actions/workflows/cmake.yml)
+
+## Table of contents
 
 1. [Design Goals](#Design-Goals)
 2. [Running](#Running)
