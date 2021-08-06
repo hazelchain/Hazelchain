@@ -37,7 +37,11 @@ jobs:
         run: sudo apt-get install libssl-dev
 
       - name: Run linux.sh
-        run: sudo ./${{github.workspace}}/../linux.sh
+        run: |
+          cd ..
+          sudo .\linux.sh
+          cd Hazelchain
+        shell: bash
 
       - name: Create Build Directory
         run: mkdir build
@@ -68,7 +72,8 @@ jobs:
         run: echo "D:/a/_temp/msys/msys64/mingw64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Run windows.bat
-        run: ./${{github.workspace}}/../windows.bat
+        run: .\${{github.workspace}}\..\windows.bat
+        shell: pwsh
 
       - name: Create Build Directory
         run: mkdir build
