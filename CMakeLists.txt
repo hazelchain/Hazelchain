@@ -3,25 +3,28 @@ project(Hazelchain CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include(FetchContent)
+#include(FetchContent)
 
-message(STATUS "Downloading external dependencies... (1 of 2)")
-FetchContent_Declare(
-        cpr
-        GIT_REPOSITORY https://github.com/whoshuu/cpr.git
-        GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9
-)
-message(STATUS "Downloading external dependencies... (2 of 2")
-FetchContent_Declare(
-        boost
-        GIT_REPOSITORY https://github.com/boostorg/boost.git
-        GIT_TAG master
-        PREFIX boost
-        GIT_SUBMODULES libs/multiprecision
-)
-FetchContent_MakeAvailable(cpr boost)
+#message(STATUS "Downloading external dependencies... (1 of 2)")
+#FetchContent_Declare(
+#        cpr
+#        GIT_REPOSITORY https://github.com/whoshuu/cpr.git
+#        GIT_TAG c8d33915dbd88ad6c92b258869b03aba06587ff9
+#)
+#message(STATUS "Downloading external dependencies... (2 of 2")
+#FetchContent_Declare(
+#        boost
+#        GIT_REPOSITORY https://github.com/boostorg/boost.git
+#        GIT_TAG master
+#        PREFIX boost
+#        GIT_SUBMODULES libs/multiprecision
+#)
+#FetchContent_MakeAvailable(cpr boost)
+#
+#message(STATUS "Downloaded external dependencies!")
 
-message(STATUS "Downloaded external dependencies!")
+find_package(boost REQUIRED)
+find_package(cpr CONFIG REQUIRED)
 
 add_executable(
         ${PROJECT_NAME}
@@ -38,7 +41,7 @@ add_executable(
 
 message(STATUS "Including local dependencies...")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE cpr::cpr boost)
+target_link_libraries(${PROJECT_NAME} PRIVATE cpr boost::boost)
 
 include_directories(
         libs/json
