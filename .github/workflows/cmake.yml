@@ -22,7 +22,7 @@ jobs:
         run: sudo apt-get install libssl-dev
 
       - name: Run linux.sh
-        run: ./linux.sh
+        run: sudo linux.sh
 
       - name: Create Build Directory
         run: mkdir build
