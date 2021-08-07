@@ -36,8 +36,7 @@ jobs:
       - name: Run linux.sh
         run: |
           ls
-          sudo linux.sh
-        shell: bash
+          linux.sh
 
       - name: Create Build Directory
         run: mkdir build
