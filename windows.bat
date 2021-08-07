@@ -1,3 +1,5 @@
+echo "Directory: %~f0"
+
 cd C:/
 
 if not exist dev\ ( mkdir dev )

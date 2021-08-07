@@ -1,3 +1,5 @@
+echo "Directory: $PWD"
+
 cd ~
 
 if [ ! -d "dev" ]; then mkdir dev; fi

@@ -27,17 +27,14 @@ jobs:
 
 
   linux:
-    name: Build Cmake on Linux
+    name: Run on Ubuntu latest
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download libssl-dev
-        run: sudo apt-get install libssl-dev
-
       - name: Run linux.sh
-        run: sudo ./linux.sh
+        run: sudo linux.sh
         shell: bash
 
       - name: Create Build Directory
@@ -50,7 +47,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} -DCMAKE_TOOLCHAIN_FILE=D:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake
 
   windows:
-    name: Build Cmake on Windows
+    name: Run on Windows latest
     runs-on: windows-latest
 
     steps:
@@ -62,8 +59,6 @@ jobs:
           install: >-
             git
             mingw-w64-x86_64-cmake
-#            python
-#            pip
 
       - name: Put MSYS2_MinGW64 on PATH
         run: echo "D:/a/_temp/msys/msys64/mingw64/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
