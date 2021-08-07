@@ -34,9 +34,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Run linux.sh
-        run: |
-          ls
-          linux.sh
+        run: ./$PWD/linux.sh
 
       - name: Create Build Directory
         run: mkdir build
