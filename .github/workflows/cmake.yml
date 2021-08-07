@@ -33,6 +33,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: directory
+        run: ls
+
       - name: Run linux.sh
         run: sudo linux.sh
         shell: bash
