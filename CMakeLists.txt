@@ -3,8 +3,21 @@ project(Hazelchain)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(boost REQUIRED)
-find_package(cpr CONFIG REQUIRED)
+add_definitions(
+        -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake
+        -DBoost_USE_STATIC_LIBS=ON
+)
+
+if (WIN32)
+    set(CMAKE_TOOLCHAIN_FILE "/mnt/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
+else ()
+    set(CMAKE_TOOLCHAIN_FILE "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
+endif ()
+unset (Boost_INCLUDE_DIR CACHE)
+unset (Boost_LIBRARY_DIRS CACHE)
+
+find_package(Boost REQUIRED)
+#find_package(cpr CONFIG REQUIRED)
 
 add_executable(
         ${PROJECT_NAME}
@@ -21,7 +34,11 @@ add_executable(
 
 message(STATUS "Including local dependencies...")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE cpr boost::boost)
+target_link_libraries(
+        ${PROJECT_NAME} PRIVATE
+#        cpr
+        Boost::boost
+        )
 
 include_directories(
         libs/json

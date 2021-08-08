@@ -27,7 +27,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ### Prerequisites:
 
-- Windows
+- Windows:
     - Windows 7 or higher
     - git
 - GNU/Linux:
@@ -37,15 +37,17 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 1. download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
 2. extract the contents to an empty folder.
-3. 
+3. Run the bootstrapper (*Keep in mind the files to be downloaded are large*)
     - If you're using linux:
         1. Open a bash
         2. Run `linux.sh`
+
     - If you're using Windows:
-        2. Open Windows Powershell
-        3. Run `windows.bat` in powershell
-4. Optional: Add `dev/vcpkg` to path
-5. Open and run the project as a Cmake project in your IDE.
+       2. Open Windows Powershell
+       3. Run `windows.bat` in powershell
+
+7. Optional: Add `dev/vcpkg` to path
+8. Open and run the project as a Cmake project in your IDE.
 
 ---
 
