@@ -9,10 +9,12 @@ TransactionNode::TransactionNode(Transaction data) : tData(std::move(data)) {
     this->right = nullptr;
     this->left = nullptr;
 }
+
 TransactionNode::TransactionNode(const Transaction *data) : tData(data) {
     this->right = nullptr;
     this->left = nullptr;
 }
+
 TransactionNode::TransactionNode(Transaction *data) : tData(data) {
     this->right = nullptr;
     this->left = nullptr;

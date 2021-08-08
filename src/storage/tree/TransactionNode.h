@@ -19,7 +19,9 @@ public:
     TransactionNode *right;
 
     explicit TransactionNode(Transaction data);
+
     explicit TransactionNode(const Transaction *data);
+
     explicit TransactionNode(Transaction *data);
 
     void Hash();

@@ -5,27 +5,42 @@
 #ifndef HAZELCHAIN_STRUTIL_H
 #define HAZELCHAIN_STRUTIL_H
 
-#include <boost/multiprecision/cpp_int.hpp>
+#include "Math.h"
 
 using namespace std;
-using namespace boost::multiprecision;
-using namespace boost;
+using namespace math;
 
 namespace util {
     inline string string_of(char c, int amount);
+
     inline string reverse(string in);
-    inline uint1024_t stringToInt(const string &in);
-    template<class T> inline string to_string(const T &in);
+
+    inline uint256_t stringToInt(const string &in);
+
+    template<class T>
+    inline string to_string(const T &in);
+
     inline bool isGreaterThan(const string &a, const string &b);
+
     inline const char *concat(const char *a, const char *b);
+
     inline string concat(const string &a, const string &b);
+
     inline string concat(initializer_list<string> in);
+
     inline bool contains(const char *str, const char *word);
+
     inline bool contains(const initializer_list<char *> &arr, const char *find);
+
     inline bool contains(int size, char **arr, const char *find);
-    template<class T> inline string vectorToString(vector<T> in);
+
+    template<class T>
+    inline string vectorToString(vector<T> in);
+
     inline string replace(string in, const string &a, const string &b);
+
     inline vector<string> split(const string &in, const char a);
+
     inline int count_of(const string &in, const char a);
 
 
@@ -36,21 +51,22 @@ namespace util {
     }
 
     inline string reverse(string in) {
-        for (auto [i, n] = tuple<size_t, size_t>(0, in.length()); i < n / 2; ++i)
+        for (size_t i = 0, n = in.length(); i < n / 2; ++i)
             swap(in[i], in[n - i - 1]);
         return in;
     }
 
-    inline uint1024_t stringToInt(const string &in) {
+    inline uint256_t stringToInt(const string &in) {
         string inr = reverse(in);
-        uint1024_t out = 0;
-        for (long long i = 0; i < inr.size(); ++i) {
-            out += static_cast<uint1024_t>(inr[i]  *pow(10, i));
+        uint256_t out = 0;
+        for (long i = 0; i < inr.size(); ++i) {
+            out += static_cast<uint256_t>(inr[i] * pow(10, i));
         }
         return out;
     }
 
-    template<class T> inline string to_string(const T &in) {
+    template<class T>
+    inline string to_string(const T &in) {
         stringstream ss;
         ss << in;
         return ss.str();
@@ -59,8 +75,8 @@ namespace util {
     inline bool isGreaterThan(const string &a, const string &b) {
         if (a.size() > b.size()) return true;
         if (a.size() < b.size()) return false;
-        uint1024_t ad = stringToInt(a);
-        uint1024_t bd = stringToInt(b);
+        uint256_t ad = stringToInt(a);
+        uint256_t bd = stringToInt(b);
         return ad > bd;
     }
 
@@ -83,7 +99,7 @@ namespace util {
     inline string concat(initializer_list<string> in) {
         stringstream ss;
 
-        for (const string& p : in) {
+        for (const string &p : in) {
             ss << p;
         }
 
@@ -104,19 +120,22 @@ namespace util {
         } while ((i += 1) < sl - wl);
         return false;
     }
+
     inline bool contains(const initializer_list<char *> &arr,
                          const char *find) {
         return any_of(arr.begin(), arr.end(), [find](char *x) {
             return contains(x, find);
         });
     }
+
     inline bool contains(int size, char **arr, const char *find) {
         return any_of(arr, arr + size, [find](char *x) {
             return contains(x, find);
         });
     }
 
-    template<class T> inline string vectorToString(vector<T> in) {
+    template<class T>
+    inline string vectorToString(vector<T> in) {
         return string{in.begin(), in.end()};
     }
 
@@ -125,7 +144,7 @@ namespace util {
             if (in.substr(i, a.size()) == a) {
                 stringstream ss;
                 ss << in.substr(0, i) << b << in.substr(i + a.size(),
-                                                          in.size());
+                                                        in.size());
                 in = ss.str();
             }
         }

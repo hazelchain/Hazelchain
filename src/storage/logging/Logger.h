@@ -15,14 +15,18 @@ public:
     bool bLog;
 
     Logger();
+
     explicit Logger(string locationIn);
 
     void log(const string &in);
+
     void log(const initializer_list<string> &in);
+
 private:
     string location_;
 
     void _log(const string &in) const;
+
     void _show(const string &in) const;
 };
 

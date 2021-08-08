@@ -26,10 +26,6 @@ namespace util {
 
     inline bool contains(const map<string, string> &in, const string &key);
 
-    namespace req {
-        inline http::Response get(const char *ip);
-    }
-
     inline bool exists(const char *in) {
         DIR *t = opendir(in);
         if (!t) {
@@ -51,10 +47,7 @@ namespace util {
     }
 
     inline string getIp() {
-        string out = vectorToString<uint8_t>(
-                req::get("http://api.ipify.org").body
-        );
-        return out;
+        return requests::get("requests://api.ipify.org").response;
     }
 
     inline string currentTime(const char *fmt) {
@@ -70,12 +63,6 @@ namespace util {
             if (i.first == key) return true;
         }
         return false;
-    }
-
-    namespace req {
-        inline http::Response get(const char *ip) {
-            return http::get(ip);
-        }
     }
 }
 

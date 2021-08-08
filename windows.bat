@@ -3,28 +3,24 @@
 echo "Directory: %~f0"
 
 cd C:/
-
 if not exist dev\ ( mkdir dev )
 cd dev
 if not exist vcpkg\vcpkg.exe ( git clone https://github.com/Microsoft/vcpkg.git )
+cd vcpkg
 
 call :GETPARENT PARENT
 if /I "%PARENT%" == "powershell" goto :POWERSHELL
 if /I "%PARENT%" == "pwsh" goto :POWERSHELL
 
-cd vcpkg
 call bootstrap-vcpkg.bat -disableMetrics
-call vcpkg.exe install boost:x64-windows
-call vcpkg.exe install cpr:x64-windows
+call vcpkg.exe install curl
 call vcpkg.exe integrate install
 echo done!
 goto :EOF
 
 :POWERSHELL
-cd vcpkg
 call .\bootstrap-vcpkg.bat -disableMetrics
-call .\vcpkg.exe install boost:x64-windows
-call .\vcpkg.exe install cpr:x64-windows
+call .\vcpkg install curl
 call .\vcpkg.exe integrate install
 echo done!
 goto :EOF

@@ -6,16 +6,17 @@
 
 #include <sstream>
 
-Transaction::Transaction(string  payerIn, string  payeeIn, int64_t amountIn)
+Transaction::Transaction(string payerIn, string payeeIn, int64_t amountIn)
         : payer(std::move(payerIn)), payee(std::move(payeeIn)),
-                amount(amountIn) {
+          amount(amountIn) {
 }
 
 Transaction::Transaction(Transaction *t)
-        : Transaction{ t->payer, t->payee, t->amount } {
+        : Transaction{t->payer, t->payee, t->amount} {
 }
+
 Transaction::Transaction(const Transaction *t)
-        : Transaction{ t->payer, t->payee, t->amount } {
+        : Transaction{t->payer, t->payee, t->amount} {
 }
 
 string Transaction::string_dump() const {

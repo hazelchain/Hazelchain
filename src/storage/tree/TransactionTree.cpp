@@ -10,6 +10,7 @@ TransactionTree::TransactionTree(Transaction *t) {
     root = new TransactionNode(t);
     hash();
 }
+
 TransactionTree::TransactionTree(const vector<Transaction *> &tx) {
     root = new TransactionNode(tx.at(0));
 
@@ -23,20 +24,22 @@ TransactionTree::TransactionTree(const vector<Transaction *> &tx) {
 void TransactionTree::add(const Transaction &value) {
     add(root, new TransactionNode(value));
 }
+
 void TransactionTree::add(const Transaction *node) {
     add(root, new TransactionNode(node));
 }
+
 void TransactionTree::add(TransactionNode *node) {
     add(root, node);
     hash();
 }
+
 void TransactionTree::add(TransactionNode *current, TransactionNode *node) {
     node->Hash();
-    if(util::isGreaterThan(node->sHash, current->sHash)) {
+    if (util::isGreaterThan(node->sHash, current->sHash)) {
         if (current->left != nullptr) add(current->left, node);
         else current->left = node;
-    }
-    else {
+    } else {
         if (current->right != nullptr) add(current->right, node);
         else current->right = node;
     }
@@ -45,6 +48,7 @@ void TransactionTree::add(TransactionNode *current, TransactionNode *node) {
 void TransactionTree::print() {
     print(root, 0, 4);
 }
+
 void TransactionTree::print(TransactionNode *current, int indent, int ia) {
     cout << util::string_of(' ', indent) << current->sHash << endl;
 
@@ -55,6 +59,7 @@ void TransactionTree::print(TransactionNode *current, int indent, int ia) {
 void TransactionTree::hash() {
     hash(root);
 }
+
 string TransactionTree::hash(TransactionNode *node) {
     stringstream ss;
     ss << node->tData.string_dump();
@@ -67,6 +72,7 @@ string TransactionTree::hash(TransactionNode *node) {
 vector<string> TransactionTree::hashVector() {
     return hashVector(root);
 }
+
 vector<string> TransactionTree::hashVector(TransactionNode *node) {
     vector<string> out;
     out.push_back(node->sHash);

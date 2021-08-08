@@ -14,7 +14,9 @@ using namespace std;
 class Transaction {
 public:
     Transaction(string payerIn, string payeeIn, int64_t amountIn);
+
     explicit Transaction(Transaction *t);
+
     explicit Transaction(const Transaction *t);
 
     string payer;

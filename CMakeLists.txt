@@ -3,21 +3,13 @@ project(Hazelchain)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_definitions(
-        -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DBoost_USE_STATIC_LIBS=ON
-)
-
 if (WIN32)
-    set(CMAKE_TOOLCHAIN_FILE "/mnt/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
-else ()
     set(CMAKE_TOOLCHAIN_FILE "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
+else ()
+    set(CMAKE_TOOLCHAIN_FILE "/mnt/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif ()
-unset (Boost_INCLUDE_DIR CACHE)
-unset (Boost_LIBRARY_DIRS CACHE)
 
-find_package(Boost REQUIRED)
-#find_package(cpr CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 
 add_executable(
         ${PROJECT_NAME}
@@ -30,15 +22,10 @@ add_executable(
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
         src/util/Http.h
-)
+        src/util/Math.h src/util/Math.cpp)
 
-message(STATUS "Including local dependencies...")
-
-target_link_libraries(
-        ${PROJECT_NAME} PRIVATE
-#        cpr
-        Boost::boost
-        )
+target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
 
 include_directories(
         libs/json
@@ -46,6 +33,4 @@ include_directories(
         libs/sqlite
 )
 
-message(STATUS "Included local dependencies!")
-
-message(STATUS "Complete!")
+message(STATUS "Done!")

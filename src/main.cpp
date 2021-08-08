@@ -13,9 +13,13 @@ using namespace std;
 using json = nlohmann::json;
 
 void sync();
+
 void setupDirectories();
+
 void generateDir(const char *name);
+
 int findNodes();
+
 void loadSettings();
 
 vector<Block> chain;
@@ -23,11 +27,9 @@ json settings;
 static Logger *logger;
 
 int main(int argc, char **argv) {
-    cout << util::vectorToString<string>(http::get("google.com").body) << endl;
-    return 0;
-
     loadSettings();
-    logger = new Logger(util::concat(util::currentTime("[%d-%m-%y  %H:%M:%S] "), "-log.txt"));
+    logger = new Logger(util::concat(
+            util::currentTime("[%d-%m-%y  %H:%M:%S] "), "-log.txt"));
     if (util::contains(argc, argv, "-nolog")) logger->bLog = false;
     if (util::contains(argc, argv, "-noshow")) logger->bShow = false;
     if (!util::contains(argc, argv, "-nosync")) sync();
@@ -81,12 +83,12 @@ void loadSettings() {
         return;
     }
     settings = {
-            {"ip", util::getIp()},
-            {"server_port", 10541},
-            {"test_port", 10542},
-            {"api_port", 10543},
+            {"ip",           util::getIp()},
+            {"server_port",  10541},
+            {"test_port",    10542},
+            {"api_port",     10543},
             {"genesis_hash", util::generateGenesisHash()},
-            {"nodes", -1}
+            {"nodes",        -1}
     };
     ofstream o("settings.json");
     o << settings;

@@ -11,11 +11,13 @@ Block::Block() {
     tTime_ = time(nullptr);
     transactions = nullptr;
 }
+
 Block::Block(const vector<Transaction *> &tx) {
     tTime_ = time(nullptr);
     transactions = new TransactionTree(tx);
     sTxRoot = transactions->root->sHash;
 }
+
 Block::Block(const vector<Transaction *> &tx, time_t t) {
     tTime_ = t;
     transactions = new TransactionTree(tx);
@@ -35,12 +37,12 @@ string Block::getHash() {
 
 json Block::toJson() {
     return {
-        {"time",        tTime_},
-        {"sPrevHash",   sPrevHash},
-        {"stateMerkle", sStateHash},
-        {"hash",        hash()},
-        {"sTxRoot",     sTxRoot},
-        {"tx",          transactions->hashVector()}
+            {"time",        tTime_},
+            {"sPrevHash",   sPrevHash},
+            {"stateMerkle", sStateHash},
+            {"hash",        hash()},
+            {"sTxRoot",     sTxRoot},
+            {"tx",          transactions->hashVector()}
     };
 }
 
