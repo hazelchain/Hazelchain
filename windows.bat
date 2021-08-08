@@ -10,7 +10,7 @@ if not exist vcpkg\vcpkg.exe ( git clone https://github.com/Microsoft/vcpkg.git 
 
 call :GETPARENT PARENT
 if /I "%PARENT%" == "powershell" goto :POWERSHELL
-if /I "%PARENT%" == "pwsh" goto :CMD
+if /I "%PARENT%" == "pwsh" goto :POWERSHELL
 
 cd vcpkg
 call bootstrap-vcpkg.bat -disableMetrics
