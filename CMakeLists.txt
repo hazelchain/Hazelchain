@@ -10,6 +10,7 @@ else ()
 endif ()
 
 find_package(CURL REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 add_executable(
         ${PROJECT_NAME}
@@ -22,9 +23,9 @@ add_executable(
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
         src/util/Http.h
-        src/util/Math.h src/util/Math.cpp)
+        src/util/Math.h src/util/Math.cpp src/util/sha256.h)
 
-target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
 
 include_directories(

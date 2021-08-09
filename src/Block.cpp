@@ -3,9 +3,10 @@
 //
 
 #include "Block.h"
-#include <sha256.h>
+#include "util/sha256.h"
+//#include <sha256.h>
+#include <openssl/sha.h>
 #include <ctime>
-#include <ostream>
 
 Block::Block() {
     tTime_ = time(nullptr);
