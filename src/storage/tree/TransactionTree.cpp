@@ -3,8 +3,9 @@
 //
 
 #include "TransactionTree.h"
-#include <sha256.h>
+//#include <sha256.h>
 #include "../../util/util.h"
+#include "../../util/sha256.h"
 
 TransactionTree::TransactionTree(Transaction *t) {
     root = new TransactionNode(t);
@@ -65,7 +66,7 @@ string TransactionTree::hash(TransactionNode *node) {
     ss << node->tData.string_dump();
     if (node->left) ss << hash(node->left);
     if (node->right) ss << hash(node->right);
-    node->sHash = sha256(ss.str());
+    node->sHash = util::sha256(ss.str());
     return node->sHash;
 }
 

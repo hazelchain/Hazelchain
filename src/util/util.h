@@ -5,8 +5,8 @@
 #ifndef HAZELCHAIN_UTIL_H
 #define HAZELCHAIN_UTIL_H
 
-#include <bits/stdc++.h>
 #include <dirent.h>
+#include <chrono>
 #include "../Transaction.h"
 #include "../storage/tree/TransactionTree.h"
 #include "../Block.h"
@@ -14,6 +14,7 @@
 #include "strutil.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 namespace util {
     inline bool exists(const char *in);
@@ -25,6 +26,9 @@ namespace util {
     inline string currentTime(const char *fmt);
 
     inline bool contains(const map<string, string> &in, const string &key);
+
+    inline json loadJson(const string &file);
+
 
     inline bool exists(const char *in) {
         DIR *t = opendir(in);
@@ -47,14 +51,13 @@ namespace util {
     }
 
     inline string getIp() {
-        return requests::get("requests://api.ipify.org").response;
+        return requests::GET("requests://api.ipify.org").response;
     }
 
     inline string currentTime(const char *fmt) {
         char buffer[256];
         const time_t t = time(nullptr);
         strftime(buffer, sizeof(buffer), fmt, localtime(&t));
-//        buffer[255] = '\0';
         return buffer;
     }
 
@@ -63,6 +66,17 @@ namespace util {
             if (i.first == key) return true;
         }
         return false;
+    }
+
+    inline json loadJson(const string &file) {
+        ifstream ifs("settings.json");
+        if (ifs.good()) {
+            if (ifs.peek() == std::ifstream::traits_type::eof()) {
+                return {{"bad", true}};
+            }
+            return json::parse(ifs);
+        }
+        return {{"bad", true}};
     }
 }
 

@@ -6,72 +6,64 @@
 #define HAZELCHAIN_HTTP_H
 
 #include <string>
-#include <utility>
-#include <json.hpp>
-#include <curl/curl.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+//#include <cpprest/http_client.h>
+//#include <cpprest/filestream.h>
+
 
 using namespace std;
+//using namespace web;
+//using namespace web::json;
+//using namespace web::http;
+//using namespace web::http::client;
+//using namespace utility;
+//using namespace utility::conversions;
 
-namespace requests {
-    using json = nlohmann::json;
-
-//    size_t writeFunction(void *ptr, size_t size, size_t nmemb,
-//                         string *data) {
-//        data->append((char *) ptr, size * nmemb);
-//        return size * nmemb;
-//    }
-
+namespace util::requests {
     struct Response {
         string url;
         string headers;
         string response;
-        int code;
-        double elapsed;
+        long code;
 
         Response() {
             url = "-1";
             headers = "-1";
             response = "-1";
             code = -1;
-            elapsed = -1;
         }
 
         Response(string url,
                  string headers,
                  string response,
-                 int code,
-                 double elapsed)
+                 int code)
                 : url(std::move(url)),
                   headers(std::move(headers)),
                   response(std::move(response)),
-                  code(code),
-                  elapsed(elapsed) {
+                  code(code) {
         }
     };
 
-    Response get(const string &url) {
-        auto curl = curl_easy_init();
-        if (curl) {
-            Response out;
-            out.url = url;
+    inline Response GET(const string &url) {
+        //        wstring wUrl;
+        //        for (size_t i = 0; i < url.length(); ++i) {
+        //            wUrl += wchar_t(url[i]);
+        //        }
+        //
+        //        http_client client(wUrl);
+        //
+        //        client.request(methods::GET).then([](res) {
+        //            res.status_code();
+        //        });
 
-            curl_easy_setopt(curl, CURLOPT_URL, &url);
-            curl_easy_setopt(curl, CURLOPT_USERAGENT, "curl/7.42.0");
-
-//            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &out.response);
-            curl_easy_setopt(curl, CURLOPT_HEADERDATA, &out.headers);
-
-            curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &out.code);
-            curl_easy_getinfo(curl, CURLINFO_TOTAL_TIME, &out.elapsed);
-            curl_easy_getinfo(curl, CURLINFO_EFFECTIVE_URL, &url);
-
-            curl_easy_perform(curl);
-            curl_easy_cleanup(curl);
-            curl = nullptr;
-            return out;
-        }
-        return {"-1", "-1", "-1", -1, -1};
+        return {
+                "not implemented",
+                "not implemented",
+                "not implemented",
+                -1
+        };
     }
 }
 

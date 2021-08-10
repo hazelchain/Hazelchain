@@ -10,24 +10,25 @@
 
 using namespace std;
 
-string sha256(const string &in) {
-    unsigned char buffer[8192];
-    unsigned char output[SHA256_DIGEST_LENGTH];
-    size_t len;
+namespace util {
+    inline string sha256(const string &in) {
+        unsigned char buffer[8192];
+        unsigned char output[SHA256_DIGEST_LENGTH];
+        size_t len;
 
-    SHA256_CTX sha;
-    SHA256_Init(&sha);
-    SHA256_Update(&sha, buffer, sizeof len);
-    SHA256_Final(output, &sha);
+        SHA256_CTX sha;
+        SHA256_Init(&sha);
+        SHA256_Update(&sha, buffer, sizeof len);
+        SHA256_Final(output, &sha);
 
-    char p[SHA256_DIGEST_LENGTH];
+        char p[SHA256_DIGEST_LENGTH];
 
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
-        p[i] = output[i];
+        for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+            p[i] = output[i];
+        }
+
+        string o(p);
+        return o;
     }
-
-    string o(p);
-    return o;
 }
-
 #endif //HAZELCHAIN_SHA256_H

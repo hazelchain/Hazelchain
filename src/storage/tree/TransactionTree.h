@@ -11,10 +11,8 @@
 #include <fstream>
 #include "../../Transaction.h"
 #include "TransactionNode.h"
-#include <json.hpp>
 
 using namespace std;
-using json = nlohmann::json;
 
 struct TransactionTree {
 public:

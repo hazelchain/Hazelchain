@@ -52,7 +52,7 @@ string Block::hash() {
     ss << tTime_ << sStateHash << sTxRoot;
     for (const string &t : transactions->hashVector()) ss << t;
     ss << sPrevHash;
-    return sHash_ = sha256(ss.str());
+    return sHash_ = util::sha256(ss.str());
 }
 
 void Block::save() {

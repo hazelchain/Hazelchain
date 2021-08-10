@@ -46,8 +46,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
        2. Open Windows Powershell
        3. Run `windows.bat` in powershell
 
-7. Optional: Add `dev/vcpkg` to path
-8. Open and run the project as a Cmake project in your IDE.
+4. Open and run the project as a Cmake project in your IDE
 
 ---
 

@@ -9,7 +9,8 @@ else ()
     set(CMAKE_TOOLCHAIN_FILE "/mnt/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif ()
 
-find_package(CURL REQUIRED)
+#find_package(CURL REQUIRED)
+find_package(cpprestsdk REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 add_executable(
@@ -25,8 +26,13 @@ add_executable(
         src/util/Http.h
         src/util/Math.h src/util/Math.cpp src/util/sha256.h)
 
-target_link_libraries(${PROJECT_NAME} ${CURL_LIBRARIES} OpenSSL::SSL OpenSSL::Crypto)
-target_include_directories(${PROJECT_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
+target_link_libraries(
+        ${PROJECT_NAME}
+#        ${CURL_LIBRARIES}
+        cpprestsdk::cpprest
+        OpenSSL::SSL OpenSSL::Crypto
+)
+#target_include_directories(${PROJECT_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
 
 include_directories(
         libs/json

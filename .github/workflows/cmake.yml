@@ -53,4 +53,5 @@ jobs:
       #        run: CMake configure
 
       - name: Build
-        run: cmake --build ${{github.workspace}}/build -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows
+#        run: cmake --build ${{github.workspace}}/build -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x86-windows
+        run: cmake --build ${{github.workspace}}/build --preset "MinGW x64"

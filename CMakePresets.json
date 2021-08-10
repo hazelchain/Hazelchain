@@ -1,0 +1,34 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 16,
+    "patch": 3
+  },
+  "configurePresets": [
+    {
+      "name": "Base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "MinGW x64-debug",
+      "displayName": "MinGW",
+      "description": "run cmake in mingw-x64",
+      "generator": "CodeBlocks - MinGW Makefiles",
+      "binaryDir": "${sourceDir}/cmake-build-mingw",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "C:\\dev\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "MinGW x64",
+      "configurePreset": "MinGW x64-debug"
+    }
+  ]
+}
