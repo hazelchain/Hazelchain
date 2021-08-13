@@ -18,12 +18,14 @@ Goals that were taken into consideration when developing Hazelchain, were that w
 easy to understand cryptocurrency.
 
 To distribute coins as well as reduce Hazelchain's carbon footprint, hazelchain was developed to be able to switch
-between 2 concensus algorithms, both [proof of work](https://www.investopedia.com/terms/p/proof-work.asp)
+between 2 consensus algorithms, both [proof of work](https://www.investopedia.com/terms/p/proof-work.asp)
 and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ---
 
 ## Running
+
+###### Warning: this was tested on Windows with MinGW-x86, results with other programs may vary
 
 ### Prerequisites:
 
@@ -43,8 +45,8 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
         2. Run `linux.sh`
 
     - If you're using Windows:
-       2. Open Windows Powershell
-       3. Run `windows.bat` in powershell
+        2. Open Windows Powershell
+        3. Run `windows.bat` in powershell
 
 4. Open and run the project as a Cmake project in your IDE
 

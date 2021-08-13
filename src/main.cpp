@@ -103,7 +103,10 @@ void loadSettings(Logger &logger) {
             {"test_port",    10542},
             {"api_port",     10543},
             {"genesis_hash", util::generateGenesisHash()},
-            {"nodes",        -1}
+            {"nodes",        {
+                                     {"fallback", {"-1"}},
+                                     {"found", nullptr}
+                             }}
     });
     settings = recovered;
 
