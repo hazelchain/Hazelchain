@@ -23,7 +23,7 @@ add_executable(
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
         src/util/Http.h
-        src/util/Math.h src/util/Math.cpp src/util/sha256.h)
+        src/util/Math.h src/util/Math.cpp src/util/sha256.h src/node/client.h src/constants.h)
 
 target_link_libraries(
         ${PROJECT_NAME}
