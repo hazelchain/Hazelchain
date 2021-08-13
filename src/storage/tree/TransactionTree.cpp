@@ -11,7 +11,7 @@ TransactionTree::TransactionTree(Transaction *t) {
     _hash();
 }
 
-TransactionTree::TransactionTree(const vector<Transaction> &tx) {
+TransactionTree::TransactionTree(const std::vector<Transaction> &tx) {
     root = new TransactionNode(tx.at(0));
 
     for (int i = 1; i < tx.size(); ++i) {
@@ -20,7 +20,7 @@ TransactionTree::TransactionTree(const vector<Transaction> &tx) {
     _hash();
 }
 
-TransactionTree::TransactionTree(initializer_list<Transaction> tx) {
+TransactionTree::TransactionTree(std::initializer_list<Transaction> tx) {
     for (auto i = tx.begin(); i != tx.end(); ++i) {
         if (i == tx.begin()) {
             root = new TransactionNode(i);
@@ -51,23 +51,12 @@ void TransactionTree::_add(TransactionNode *current, TransactionNode *node) {
     }
 }
 
-void TransactionTree::print() {
-    _print(root, 0, 4);
-}
-
-void TransactionTree::_print(TransactionNode *current, int indent, int ia) {
-    cout << util::string_of(' ', indent) << current->sHash << endl;
-
-    if (current->left) _print(current->left, indent + ia, ia);
-    if (current->right) _print(current->right, indent + ia, ia);
-}
-
 void TransactionTree::_hash() {
     _hash(root);
 }
 
-string TransactionTree::_hash(TransactionNode *node) {
-    stringstream ss;
+std::string TransactionTree::_hash(TransactionNode *node) {
+    std::stringstream ss;
     ss << node->tData.dump();
     if (node->left) ss << _hash(node->left);
     if (node->right) ss << _hash(node->right);
@@ -75,19 +64,19 @@ string TransactionTree::_hash(TransactionNode *node) {
     return node->sHash;
 }
 
-vector<string> TransactionTree::hashVector() {
+std::vector<std::string> TransactionTree::hashVector() {
     return _hashVector(root);
 }
 
-vector<string> TransactionTree::_hashVector(TransactionNode *node) {
-    vector<string> out;
+std::vector<std::string> TransactionTree::_hashVector(TransactionNode *node) {
+    std::vector<std::string> out;
     out.push_back(node->sHash);
     if (node->left) {
-        vector<string> l = _hashVector(node->left);
+        std::vector<std::string> l = _hashVector(node->left);
         out.insert(out.end(), l.begin(), l.end());
     }
     if (node->right) {
-        vector<string> l = _hashVector(node->right);
+        std::vector<std::string> l = _hashVector(node->right);
         out.insert(out.end(), l.begin(), l.end());
     }
     return out;

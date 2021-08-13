@@ -7,9 +7,7 @@
 #include "Logger.h"
 #include "../../util/util.h"
 
-using namespace std;
-
-string parseLevel(Level in) {
+std::string parseLevel(Level in) {
     switch (in) {
         case debug:
             return "[debug]";
@@ -23,38 +21,13 @@ string parseLevel(Level in) {
     return "[info]";
 }
 
-//void Logger::_log() const {
-//    if (!bLog) return;
-//    ofstream out;
-//    out.open(location_, ios_base::app);
-//
-//    string p;
-//    switch (debug_level_) {
-//        case debug:
-//            p = "[debug] ";
-//            break;
-//        case error:
-//            p = "[error] ";
-//            break;
-//        case warning:
-//            p = "[warning] ";
-//            break;
-//        case info:
-//            p = "[info] ";
-//            break;
-//    }
-//
-//    out << util::currentTime("[%d:%m:%y  %H:%M:%S] ") << p << stream_;
-//    out.close();
-//}
-
 Logger::Logger() = default;
 
-Logger::Logger(string location, ostream &stream)
+Logger::Logger(std::string location, std::ostream &stream)
         : location_(move(location)), stream_(&stream) {
 }
 
-Logger &Logger::operator<<(const string &msg) {
+Logger &Logger::operator<<(const std::string &msg) {
     *stream_ << msg;
     return *this;
 }

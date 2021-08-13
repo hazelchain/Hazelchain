@@ -9,21 +9,19 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class Transaction {
 public:
-    Transaction(string payerIn, string payeeIn, int64_t amountIn);
+    Transaction(std::string payerIn, std::string payeeIn, int64_t amountIn);
 
     explicit Transaction(Transaction *t);
 
     explicit Transaction(const Transaction *t);
 
-    string payer;
-    string payee;
+    std::string payer;
+    std::string payee;
     int64_t amount;
 
-    [[nodiscard]] string dump() const;
+    [[nodiscard]] std::string dump() const;
 
 };
 

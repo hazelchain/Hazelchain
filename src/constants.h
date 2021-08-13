@@ -6,6 +6,8 @@
 #define HAZELCHAIN_CONSTANTS_H
 
 namespace constants {
+    using json = nlohmann::json;
+
     Logger logger(
             util::concat(
                     util::currentTime("[%d-%m-%y  %H:%M:%S] "),

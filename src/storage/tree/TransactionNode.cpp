@@ -2,6 +2,7 @@
 // Created by chris on 2021-06-30.
 //
 
+#include <sstream>
 #include "TransactionNode.h"
 #include "../../util/sha256.h"
 
@@ -21,7 +22,7 @@ TransactionNode::TransactionNode(Transaction *data) : tData(data) {
 }
 
 void TransactionNode::Hash() {
-    stringstream ss;
+    std::stringstream ss;
     ss << tData.dump();
     if (left) ss << left->sHash;
     if (right) ss << right->sHash;

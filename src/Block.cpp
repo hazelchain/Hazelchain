@@ -5,13 +5,14 @@
 #include "Block.h"
 #include "util/sha256.h"
 #include <ctime>
+#include <sstream>
 
 Block::Block() {
     tTime_ = time(nullptr);
     transactions = nullptr;
 }
 
-Block::Block(initializer_list<Transaction> tx, time_t t) {
+Block::Block(std::initializer_list<Transaction> tx, time_t t) {
     tTime_ = t;
     transactions = new TransactionTree(tx);
     sTxRoot = transactions->root->sHash;
@@ -23,7 +24,7 @@ void Block::add(Transaction *t) {
     sTxRoot = transactions->root->sHash;
 }
 
-string Block::getHash() {
+std::string Block::getHash() {
     hash();
     return sHash_;
 }
@@ -39,16 +40,16 @@ json Block::toJson() {
     };
 }
 
-string Block::hash() {
-    stringstream ss;
+std::string Block::hash() {
+    std::stringstream ss;
     ss << tTime_ << sStateHash << sTxRoot;
-    for (const string &t : transactions->hashVector()) ss << t;
+    for (const std::string &t : transactions->hashVector()) ss << t;
     ss << sPrevHash;
     return sHash_ = util::sha256(ss.str());
 }
 
 void Block::save() {
-    ofstream out("storage/blocks/" + hash() + ".json");
+    std::ofstream out("storage/blocks/" + hash() + ".json");
     out << toJson();
     out.close();
 }

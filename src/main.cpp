@@ -6,8 +6,6 @@
 #define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
 #endif // _WIN32
 
-using json = nlohmann::json;
-
 void loadSettings();
 
 void sync();
@@ -46,7 +44,7 @@ void loadSettings() {
         recovered["nodes"]["fallback"] = target["nodes"]["fallback"];
     constants::settings = recovered;
 
-    ofstream o("settings.json");
+    std::ofstream o("settings.json");
     o << constants::settings;
     o.close();
 }

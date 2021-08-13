@@ -5,15 +5,12 @@
 #ifndef HAZELCHAIN_TRANSACTIONNODE_H
 #define HAZELCHAIN_TRANSACTIONNODE_H
 
-#include <cstring>
-#include <sstream>
+#include <string>
 #include "../../Transaction.h"
-
-using namespace std;
 
 class TransactionNode {
 public:
-    string sHash;
+    std::string sHash;
     Transaction tData;
     TransactionNode *left;
     TransactionNode *right;

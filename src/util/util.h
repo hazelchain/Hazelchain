@@ -13,21 +13,20 @@
 #include "Http.h"
 #include "strutil.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 namespace util {
     inline bool exists(const char *in);
 
-    inline string generateGenesisHash();
+    inline std::string generateGenesisHash();
 
-    inline string getIp();
+    inline std::string getIp();
 
-    inline string currentTime(const char *fmt);
+    inline std::string currentTime(const char *fmt);
 
-    inline bool contains(const map<string, string> &in, const string &key);
+    inline bool contains(const std::map<std::string, std::string> &in, const std::string &key);
 
-    inline json loadJson(const string &file, json target);
+    inline json loadJson(const std::string &file, json target);
 
 
     inline bool exists(const char *in) {
@@ -40,7 +39,7 @@ namespace util {
         return true;
     }
 
-    inline string generateGenesisHash() {
+    inline std::string generateGenesisHash() {
         // TODO: set the timestamp to the day this is released
         return Block(
                 {
@@ -61,28 +60,28 @@ namespace util {
         ).getHash();
     }
 
-    inline string getIp() {
+    inline std::string getIp() {
 //        return requests::GET("requests://api.ipify.org").response;
         return "unimplemented";
     }
 
-    inline string currentTime(const char *fmt) {
+    inline std::string currentTime(const char *fmt) {
         char buffer[256];
         const time_t t = time(nullptr);
         strftime(buffer, sizeof(buffer), fmt, localtime(&t));
         return buffer;
     }
 
-    inline bool contains(const map<string, string> &in, const string &key) {
+    inline bool contains(const std::map<std::string, std::string> &in, const std::string &key) {
         for (auto &i : in) {
             if (i.first == key) return true;
         }
         return false;
     }
 
-    inline json loadJson(const string &file, json target) {
-        ifstream ifs("settings.json");
-        if (ifs.bad() || ifs.peek() == ifstream::traits_type::eof())
+    inline json loadJson(const std::string &file, json target) {
+        std::ifstream ifs("settings.json");
+        if (ifs.bad() || ifs.peek() == std::ifstream::traits_type::eof())
             return target;
 
         json current = json::parse(ifs);

@@ -6,7 +6,7 @@
 
 #include <sstream>
 
-Transaction::Transaction(string payerIn, string payeeIn, int64_t amountIn)
+Transaction::Transaction(std::string payerIn, std::string payeeIn, int64_t amountIn)
         : payer(std::move(payerIn)), payee(std::move(payeeIn)),
           amount(amountIn) {
 }
@@ -19,8 +19,8 @@ Transaction::Transaction(const Transaction *t)
         : Transaction{t->payer, t->payee, t->amount} {
 }
 
-string Transaction::dump() const {
-    stringstream ss;
+std::string Transaction::dump() const {
+    std::stringstream ss;
     ss << payer << payee << amount;
     return ss.str();
 }

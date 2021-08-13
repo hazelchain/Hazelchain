@@ -7,8 +7,6 @@
 
 #include <vector>
 
-using namespace std;
-
 namespace math {
     class BigInt {
         const long length = 32;
@@ -46,7 +44,7 @@ namespace math {
 
         void add_recurse(BigInt other, unsigned int carry, unsigned long index);
 
-        static vector<unsigned int> num_to_arr(unsigned long long in);
+        static std::vector<unsigned int> num_to_arr(unsigned long long in);
     };
 
     typedef BigInt uint256_t;

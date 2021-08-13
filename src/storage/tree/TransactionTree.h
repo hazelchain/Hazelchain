@@ -5,14 +5,10 @@
 #ifndef HAZELCHAIN_TRANSACTIONTREE_H
 #define HAZELCHAIN_TRANSACTIONTREE_H
 
-
-#include <iostream>
 #include <vector>
 #include <fstream>
 #include "../../Transaction.h"
 #include "TransactionNode.h"
-
-using namespace std;
 
 struct TransactionTree {
 public:
@@ -20,9 +16,9 @@ public:
 
     explicit TransactionTree(Transaction *t);
 
-    explicit TransactionTree(const vector<Transaction> &tx);
+    explicit TransactionTree(const std::vector<Transaction> &tx);
 
-    TransactionTree(initializer_list<Transaction> tx);
+    TransactionTree(std::initializer_list<Transaction> tx);
 
     void add(const Transaction &value);
 
@@ -30,16 +26,16 @@ public:
 
     void print();
 
-    vector<string> hashVector();
+    std::vector<std::string> hashVector();
 
 private:
     void _add(TransactionNode *current, TransactionNode *node);
 
     void _hash();
 
-    string _hash(TransactionNode *node);
+    std::string _hash(TransactionNode *node);
 
-    vector<string> _hashVector(TransactionNode *node);
+    std::vector<std::string> _hashVector(TransactionNode *node);
 
     void _print(TransactionNode *current, int indent, int ia);
 };

@@ -11,8 +11,6 @@
 #include "../../util/util.h"
 #include "../../util/strutil.h"
 
-using namespace std;
-
 enum Level {
     debug,
     error,
@@ -21,16 +19,16 @@ enum Level {
 };
 
 class Logger {
-    ostream *stream_;
+    std::ostream *stream_;
     Level debug_level_ = info;
-    string location_;
+    std::string location_;
 public:
 
     Logger();
 
-    Logger(string location, ostream &stream);
+    Logger(std::string location, std::ostream &stream);
 
-    Logger &operator<<(const string &msg);
+    Logger &operator<<(const std::string &msg);
 
     Logger &operator<<(char c);
 

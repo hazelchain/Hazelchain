@@ -9,23 +9,12 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-//#include <cpprest/http_client.h>
-//#include <cpprest/filestream.h>
-
-
-using namespace std;
-//using namespace web;
-//using namespace web::json;
-//using namespace web::http;
-//using namespace web::http::client;
-//using namespace utility;
-//using namespace utility::conversions;
 
 namespace util::requests {
     struct Response {
-        string url;
-        string headers;
-        string response;
+        std::string url;
+        std::string headers;
+        std::string response;
         long code;
 
         Response() {
@@ -35,9 +24,9 @@ namespace util::requests {
             code = -1;
         }
 
-        Response(string url,
-                 string headers,
-                 string response,
+        Response(std::string url,
+                 std::string headers,
+                 std::string response,
                  int code)
                 : url(std::move(url)),
                   headers(std::move(headers)),
@@ -46,18 +35,7 @@ namespace util::requests {
         }
     };
 
-    inline Response GET(const string &url) {
-        //        wstring wUrl;
-        //        for (size_t i = 0; i < url.length(); ++i) {
-        //            wUrl += wchar_t(url[i]);
-        //        }
-        //
-        //        http_client client(wUrl);
-        //
-        //        client.request(methods::GET).then([](res) {
-        //            res.status_code();
-        //        });
-
+    inline Response GET(const std::string &url) {
         return {
                 "unimplemented",
                 "unimplemented",

@@ -9,21 +9,20 @@
 #include <json.hpp>
 #include "storage/tree/TransactionTree.h"
 
-using namespace std;
 using json = nlohmann::json;
 
 class Block {
 public:
-    string sPrevHash;
-    string sStateHash;
-    string sTxRoot;
+    std::string sPrevHash;
+    std::string sStateHash;
+    std::string sTxRoot;
     TransactionTree *transactions;
 
     Block();
 
-    Block(initializer_list<Transaction> tx, time_t t);
+    Block(std::initializer_list<Transaction> tx, time_t t);
 
-    string getHash();
+    std::string getHash();
 
     json toJson();
 
@@ -32,10 +31,10 @@ public:
     void save();
 
 private:
-    string sHash_;
+    std::string sHash_;
     time_t tTime_;
 
-    string hash();
+    std::string hash();
 
 };
 

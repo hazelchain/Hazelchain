@@ -38,14 +38,14 @@ void math::BigInt::zero() {
 }
 
 void math::BigInt::set(unsigned int in) {
-    vector<unsigned int> p = num_to_arr(in);
+    std::vector<unsigned int> p = num_to_arr(in);
     for (size_t i = p.size(); i > 0; --i) {
         digits[i + (length - p.size())] = p.at(i);
     }
 }
 
-vector<unsigned int> math::BigInt::num_to_arr(unsigned long long in) {
-    vector<unsigned int> out;
+std::vector<unsigned int> math::BigInt::num_to_arr(unsigned long long in) {
+    std::vector<unsigned int> out;
     while (in > 1) {
         out.push_back(in % 10);
         in = in / 10;
