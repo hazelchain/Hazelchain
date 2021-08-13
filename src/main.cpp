@@ -1,7 +1,6 @@
 #include <json.hpp>
 #include "storage/logging/Logger.h"
 #include "constants.h"
-#include "node/client.h"
 
 #ifdef _WIN32
 #define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
