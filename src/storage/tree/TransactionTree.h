@@ -20,30 +20,28 @@ public:
 
     explicit TransactionTree(Transaction *t);
 
-    explicit TransactionTree(const vector<Transaction *> &tx);
+    explicit TransactionTree(const vector<Transaction> &tx);
+
+    TransactionTree(initializer_list<Transaction> tx);
 
     void add(const Transaction &value);
 
     void add(const Transaction *node);
-
-    void add(TransactionNode *node);
 
     void print();
 
     vector<string> hashVector();
 
 private:
-    void add(TransactionNode *current, TransactionNode *node);
+    void _add(TransactionNode *current, TransactionNode *node);
 
-    void hash();
+    void _hash();
 
-    string hash(TransactionNode *node);
+    string _hash(TransactionNode *node);
 
-    vector<string> hashVector(TransactionNode *node);
+    vector<string> _hashVector(TransactionNode *node);
 
-    void print(TransactionNode *current, int indent, int ia);
-
-    vector<Transaction> getAll(TransactionNode *node);
+    void _print(TransactionNode *current, int indent, int ia);
 };
 
 

@@ -18,7 +18,7 @@
       "displayName": "MinGW",
       "description": "run cmake in mingw-x64",
       "generator": "CodeBlocks - MinGW Makefiles",
-      "binaryDir": "${sourceDir}/cmake-build-mingw",
+      "binaryDir": "${sourceDir}/cmake-build-mingw-x86",
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": "C:\\dev\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-windows"

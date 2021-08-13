@@ -4,8 +4,6 @@
 
 #include "Block.h"
 #include "util/sha256.h"
-//#include <sha256.h>
-#include <openssl/sha.h>
 #include <ctime>
 
 Block::Block() {
@@ -13,13 +11,7 @@ Block::Block() {
     transactions = nullptr;
 }
 
-Block::Block(const vector<Transaction *> &tx) {
-    tTime_ = time(nullptr);
-    transactions = new TransactionTree(tx);
-    sTxRoot = transactions->root->sHash;
-}
-
-Block::Block(const vector<Transaction *> &tx, time_t t) {
+Block::Block(initializer_list<Transaction> tx, time_t t) {
     tTime_ = t;
     transactions = new TransactionTree(tx);
     sTxRoot = transactions->root->sHash;
@@ -41,7 +33,7 @@ json Block::toJson() {
             {"time",        tTime_},
             {"sPrevHash",   sPrevHash},
             {"stateMerkle", sStateHash},
-            {"hash",        hash()},
+            {"_hash",        hash()},
             {"sTxRoot",     sTxRoot},
             {"tx",          transactions->hashVector()}
     };

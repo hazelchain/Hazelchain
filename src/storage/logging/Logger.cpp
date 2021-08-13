@@ -9,37 +9,66 @@
 
 using namespace std;
 
-Logger::Logger() {
-    bShow = true;
-    bLog = false;
-    location_ = "";
+string parseLevel(Level in) {
+    switch (in) {
+        case debug:
+            return "[debug]";
+        case error:
+            return "[error]";
+        case warning:
+            return "[warning]";
+        case info:
+            return "[info]";
+    }
+    return "[info]";
 }
 
-Logger::Logger(string locationIn) : location_(std::move(locationIn)) {
-    bShow = true;
-    bLog = true;
+//void Logger::_log() const {
+//    if (!bLog) return;
+//    ofstream out;
+//    out.open(location_, ios_base::app);
+//
+//    string p;
+//    switch (debug_level_) {
+//        case debug:
+//            p = "[debug] ";
+//            break;
+//        case error:
+//            p = "[error] ";
+//            break;
+//        case warning:
+//            p = "[warning] ";
+//            break;
+//        case info:
+//            p = "[info] ";
+//            break;
+//    }
+//
+//    out << util::currentTime("[%d:%m:%y  %H:%M:%S] ") << p << stream_;
+//    out.close();
+//}
+
+Logger::Logger() = default;
+
+Logger::Logger(string location, ostream &stream)
+        : location_(move(location)), stream_(&stream) {
 }
 
-void Logger::log(const string &in) {
-    _log(in);
-    _show(in);
+Logger &Logger::operator<<(const string &msg) {
+    *stream_ << msg;
+    return *this;
 }
 
-void Logger::log(const initializer_list<string> &in) {
-    string p = util::concat(in);
-    _log(p);
-    _show(p);
+Logger &Logger::operator<<(char c) {
+    *stream_ << c;
+    return *this;
 }
 
-void Logger::_log(const string &in) const {
-    if (!bLog) return;
-    ofstream out;
-    out.open(location_, ios_base::app);
-    out << util::concat(util::currentTime("[%d-%m-%y  %H:%M:%S] "), in);
-    out.close();
-}
-
-void Logger::_show(const string &in) const {
-    if (!bShow) return;
-    cout << in << endl;
+Logger &log(Logger &logger, Level lvl) {
+    logger.debug_level_ = lvl;
+    *logger.stream_
+            << util::currentTime("[%d:%m:%y  %H:%M:%S] ")
+            << parseLevel(lvl)
+            << " ";
+    return logger;
 }

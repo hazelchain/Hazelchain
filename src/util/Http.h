@@ -59,9 +59,9 @@ namespace util::requests {
         //        });
 
         return {
-                "not implemented",
-                "not implemented",
-                "not implemented",
+                "unimplemented",
+                "unimplemented",
+                "unimplemented",
                 -1
         };
     }

@@ -7,27 +7,28 @@
 
 #include <openssl/sha.h>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 namespace util {
-    inline string sha256(const string &in) {
-        unsigned char buffer[8192];
-        unsigned char output[SHA256_DIGEST_LENGTH];
-        size_t len;
-
-        SHA256_CTX sha;
-        SHA256_Init(&sha);
-        SHA256_Update(&sha, buffer, sizeof len);
-        SHA256_Final(output, &sha);
-
-        char p[SHA256_DIGEST_LENGTH];
-
-        for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
-            p[i] = output[i];
+    inline void sha256_string(const char *string, char outputBuffer[65]) {
+        unsigned char hash[SHA256_DIGEST_LENGTH];
+        SHA256_CTX sha256;
+        SHA256_Init(&sha256);
+        SHA256_Update(&sha256, string, strlen(string));
+        SHA256_Final(hash, &sha256);
+        int i;
+        for (i = 0; i < SHA256_DIGEST_LENGTH; i++) {
+            sprintf(outputBuffer + (i * 2), "%02x", hash[i]);
         }
+        outputBuffer[64] = 0;
+    }
 
-        string o(p);
+    inline string sha256(const string &in) {
+        char buffer[65];
+        sha256_string(in.c_str(), buffer);
+        string o(buffer);
         return o;
     }
 }

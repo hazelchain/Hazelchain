@@ -6,28 +6,35 @@
 #define HAZELCHAIN_LOGGER_H
 
 #include <string>
+#include <sstream>
+#include <vector>
+#include "../../util/util.h"
+#include "../../util/strutil.h"
 
 using namespace std;
 
+enum Level {
+    debug,
+    error,
+    warning,
+    info
+};
+
 class Logger {
+    ostream *stream_;
+    Level debug_level_ = info;
+    string location_;
 public:
-    bool bShow;
-    bool bLog;
 
     Logger();
 
-    explicit Logger(string locationIn);
+    Logger(string location, ostream &stream);
 
-    void log(const string &in);
+    Logger &operator<<(const string &msg);
 
-    void log(const initializer_list<string> &in);
+    Logger &operator<<(char c);
 
-private:
-    string location_;
-
-    void _log(const string &in) const;
-
-    void _show(const string &in) const;
+    friend Logger &log(Logger &logger, Level lvl);
 };
 
 

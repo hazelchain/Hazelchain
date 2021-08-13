@@ -13,7 +13,10 @@ if /I "%PARENT%" == "powershell" goto :POWERSHELL
 if /I "%PARENT%" == "pwsh" goto :POWERSHELL
 
 call bootstrap-vcpkg.bat -disableMetrics
-call vcpkg.exe install --recurse openssl:x64-windows cpprestsdk:x64-windows
+call vcpkg.exe install --recurse ^
+openssl:x64-windows ^
+sqlite3:x64-windows ^
+
 call vcpkg.exe integrate install
 echo done!
 goto :EOF

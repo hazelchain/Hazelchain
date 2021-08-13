@@ -27,7 +27,7 @@ namespace util {
 
     inline bool contains(const map<string, string> &in, const string &key);
 
-    inline json loadJson(const string &file);
+    inline json loadJson(const string &file, json target);
 
 
     inline bool exists(const char *in) {
@@ -41,17 +41,29 @@ namespace util {
     }
 
     inline string generateGenesisHash() {
-        vector<Transaction *> tx{
-                new Transaction("", "christian", 100),
-                new Transaction("", "justin", 100),
-                new Transaction("", "charity", 100),
-        };
-        Block gen(tx, 979516800);
-        return gen.getHash();
+        // TODO: set the timestamp to the day this is released
+        return Block(
+                {
+                        Transaction("genesis",
+                                    "christian",
+                                    50000000),
+                        Transaction("genesis",
+                                    "justin",
+                                    50000000),
+                        Transaction("genesis",
+                                    "charity",
+                                    100000000),
+                        Transaction("genesis",
+                                    "dev",
+                                    100000000),
+                },
+                1222660800
+        ).getHash();
     }
 
     inline string getIp() {
-        return requests::GET("requests://api.ipify.org").response;
+//        return requests::GET("requests://api.ipify.org").response;
+        return "unimplemented";
     }
 
     inline string currentTime(const char *fmt) {
@@ -68,15 +80,15 @@ namespace util {
         return false;
     }
 
-    inline json loadJson(const string &file) {
+    inline json loadJson(const string &file, json target) {
         ifstream ifs("settings.json");
-        if (ifs.good()) {
-            if (ifs.peek() == std::ifstream::traits_type::eof()) {
-                return {{"bad", true}};
-            }
-            return json::parse(ifs);
-        }
-        return {{"bad", true}};
+        if (ifs.bad() || ifs.peek() == ifstream::traits_type::eof())
+            return target;
+
+        json current = json::parse(ifs);
+        for (auto&[k, v] : target.items())
+            if (current.find(k) == current.end()) current[k] = v;
+        return current;
     }
 }
 

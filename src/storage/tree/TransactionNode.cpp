@@ -4,7 +4,6 @@
 
 #include "TransactionNode.h"
 #include "../../util/sha256.h"
-#include <sha256.h>
 
 TransactionNode::TransactionNode(Transaction data) : tData(std::move(data)) {
     this->right = nullptr;
@@ -23,7 +22,7 @@ TransactionNode::TransactionNode(Transaction *data) : tData(data) {
 
 void TransactionNode::Hash() {
     stringstream ss;
-    ss << tData.string_dump();
+    ss << tData.dump();
     if (left) ss << left->sHash;
     if (right) ss << right->sHash;
     this->sHash = util::sha256(ss.str());

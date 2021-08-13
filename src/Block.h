@@ -21,9 +21,7 @@ public:
 
     Block();
 
-    explicit Block(const vector<Transaction *> &tx);
-
-    Block(const vector<Transaction *> &tx, time_t t);
+    Block(initializer_list<Transaction> tx, time_t t);
 
     string getHash();
 

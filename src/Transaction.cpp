@@ -19,7 +19,7 @@ Transaction::Transaction(const Transaction *t)
         : Transaction{t->payer, t->payee, t->amount} {
 }
 
-string Transaction::string_dump() const {
+string Transaction::dump() const {
     stringstream ss;
     ss << payer << payee << amount;
     return ss.str();

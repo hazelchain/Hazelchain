@@ -9,8 +9,7 @@ else ()
     set(CMAKE_TOOLCHAIN_FILE "/mnt/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif ()
 
-#find_package(CURL REQUIRED)
-find_package(cpprestsdk REQUIRED)
+find_package(unofficial-sqlite3 REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 add_executable(
@@ -28,16 +27,13 @@ add_executable(
 
 target_link_libraries(
         ${PROJECT_NAME}
-#        ${CURL_LIBRARIES}
-        cpprestsdk::cpprest
+        unofficial::sqlite3::sqlite3
         OpenSSL::SSL OpenSSL::Crypto
 )
-#target_include_directories(${PROJECT_NAME} PUBLIC ${CURL_INCLUDE_DIRS})
 
 include_directories(
         libs/json
         libs/sha256
-        libs/sqlite
 )
 
 message(STATUS "Done!")
