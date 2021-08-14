@@ -23,7 +23,7 @@ goto :EOF
 
 :POWERSHELL
 call .\bootstrap-vcpkg.bat -disableMetrics
-call .\vcpkg.exe install openssl:x64-windows cpprestsdk:x64-windows
+call .\vcpkg.exe install openssl:x64-windows sqlite3:x64-windows
 call .\vcpkg.exe integrate install
 echo done!
 goto :EOF
