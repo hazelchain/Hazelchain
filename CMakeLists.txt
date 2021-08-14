@@ -23,13 +23,21 @@ add_executable(
         src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
         src/storage/logging/Logger.cpp src/storage/logging/Logger.h
         src/util/Http.h
-        src/util/Math.h src/util/Math.cpp src/util/sha256.h src/node/client.h src/constants.h)
+        src/util/Math.h src/util/Math.cpp src/util/sha256.h
+        src/constants.h
+#        src/node/server.h src/node/server.cpp
+#        src/node/client.h src/node/client.cpp
+)
 
 target_link_libraries(
         ${PROJECT_NAME}
         unofficial::sqlite3::sqlite3
         OpenSSL::SSL OpenSSL::Crypto
 )
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
+endif ()
 
 include_directories(
         libs/json

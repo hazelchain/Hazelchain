@@ -20,7 +20,7 @@
       "generator": "CodeBlocks - MinGW Makefiles",
       "binaryDir": "${sourceDir}/cmake-build-mingw-x64",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "C:\\dev\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "$env{windir}\\..\\dev\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-windows"
       }
     }
