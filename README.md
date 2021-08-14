@@ -51,6 +51,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 4. Open and run the project as a Cmake project in your IDE
 5. set the cmake as the directory of your chosen cmake
+6. be sure to set the cmake preset as CMakePresets.json
 
 ---
 
