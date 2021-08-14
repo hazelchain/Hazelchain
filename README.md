@@ -39,7 +39,8 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 1. download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
 2. extract the contents to an empty folder.
-3. Run the bootstrapper (*Keep in mind the files to be downloaded are large*)
+3. Download mingw x64 from [here](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
+4. Run the bootstrapper (*Keep in mind the files to be downloaded might be large*)
     - If you're using linux:
         1. Open a bash
         2. Run `linux.sh`
@@ -49,6 +50,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
         3. Run `windows.bat` in powershell
 
 4. Open and run the project as a Cmake project in your IDE
+5. set the cmake as the directory of your chosen cmake
 
 ---
 
