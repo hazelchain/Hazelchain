@@ -1,6 +1,9 @@
 #include <json.hpp>
 #include "storage/logging/Logger.h"
 #include "constants.h"
+#include "node/client.h"
+#include "util/util.h"
+#include "node/server.h"
 
 #ifdef _WIN32
 #define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
@@ -18,6 +21,10 @@ int findNodes();
 
 
 int main(int argc, char **argv) {
+    node::Server s("server", 1234);
+    s.run();
+    return 0;
+
     loadSettings();
     if (!util::contains(argc, argv, "-nosync")) sync();
 
@@ -25,7 +32,7 @@ int main(int argc, char **argv) {
 }
 
 void loadSettings() {
-    log(constants::logger, info) << "Checking for existing settings" << '\n';
+    log(constants::logger, info) << "Checking for existing settings" << logger::endl;
 
     json target = {
             {"ip",           util::getIp()},
@@ -52,35 +59,30 @@ void loadSettings() {
 void sync() {
     log(constants::logger, info)
             << "Generating directories if they don't exist"
-            << '\n';
+            << logger::endl;
 
     setupDirectories();
 
     log(constants::logger, info)
             << "Indexing and checking blocks"
-            << '\n';
+            << logger::endl;
 
     log(constants::logger, info)
             << "Genesis block _hash: "
-            << constants::settings["genesis_hash"]
-            << '\n';
+            << (std::string) constants::settings["genesis_hash"]
+            << logger::endl;
 
     log(constants::logger, info)
             << "syncing to other nodes"
-            << '\n';
+            << logger::endl;
 
     log(constants::logger, info)
             << "connected to "
             << util::to_string<int>(findNodes())
             << " other nodes"
-            << '\n';
+            << logger::endl;
 
     //TODO: implement syncing database to other nodes;
-}
-
-int findNodes() {
-    // TODO: implement finding nodes;
-    return -1;
 }
 
 void setupDirectories() {
@@ -94,12 +96,19 @@ void generateDir(const char *name) {
             log(constants::logger, info)
                     << "Could not create folder \""
                     << name
-                    << "\"";
+                    << "\""
+                    << logger::endl;
         }
     } else {
         log(constants::logger, info)
                 << "Directory \""
                 << name
-                << "\" already exists";
+                << "\" already exists"
+                << logger::endl;
     }
+}
+
+int findNodes() {
+    // TODO: implement finding nodes;
+    return -1;
 }

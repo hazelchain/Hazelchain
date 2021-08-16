@@ -3,7 +3,6 @@
 //
 
 #include <utility>
-#include <fstream>
 #include "Logger.h"
 #include "../../util/util.h"
 
@@ -32,7 +31,22 @@ Logger &Logger::operator<<(const std::string &msg) {
     return *this;
 }
 
+Logger &Logger::operator<<(int c) {
+    *stream_ << c;
+    return *this;
+}
+
 Logger &Logger::operator<<(char c) {
+    *stream_ << c;
+    return *this;
+}
+
+Logger &Logger::operator<<(double c) {
+    *stream_ << c;
+    return *this;
+}
+
+Logger &Logger::operator<<(SOCKET c) {
     *stream_ << c;
     return *this;
 }

@@ -5,10 +5,14 @@
 #ifndef HAZELCHAIN_CONSTANTS_H
 #define HAZELCHAIN_CONSTANTS_H
 
-namespace constants {
-    using json = nlohmann::json;
+#include <iostream>
+#include "util/util.h"
+#include "util/strutil.h"
 
-    Logger logger(
+using json = nlohmann::json;
+
+namespace constants {
+    inline Logger logger(
             util::concat(
                     util::currentTime("[%d-%m-%y  %H:%M:%S] "),
                     "-log.txt"
@@ -16,7 +20,7 @@ namespace constants {
             std::cout
     );
 
-    json settings = {};
+    inline json settings = {};
 }
 
 #endif //HAZELCHAIN_CONSTANTS_H
