@@ -26,7 +26,6 @@ add_executable(
         src/util/Math.h src/util/Math.cpp src/util/sha256.h
         src/constants.h
         src/node/server.h src/node/server.cpp
-        src/node/client.h src/node/client.cpp
         src/storage/Lookup.h)
 
 target_link_libraries(

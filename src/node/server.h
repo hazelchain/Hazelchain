@@ -12,6 +12,21 @@
 
 #pragma comment(lib, "ws2_32.lib") // for visual studio
 
+namespace {
+    enum operation {
+        x00,
+        x01,
+        x02,
+        null
+        };
+
+    Lookup<std::string, operation> opcodes{
+        {"0x00", operation::x00},
+        {"0x01", operation::x01},
+        {"0x02", operation::x02},
+        };
+}
+
 namespace node {
     class Server {
     private:
@@ -20,6 +35,8 @@ namespace node {
 
         WSAData wsa;
         SOCKET self, clients[CONNECT_MAX] = {};
+
+        void _respond(SOCKET s, sockaddr_in, operation op, std::vector<std::string> args);
 
     public:
         explicit Server(std::string name, int port);

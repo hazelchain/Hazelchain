@@ -160,11 +160,8 @@ namespace util {
                     break;
                 }
             }
-            if (i == (total - 1)) {
-                out.push_back(left);
-                break;
-            }
         }
+        out.push_back(left);
         return out;
     }
 

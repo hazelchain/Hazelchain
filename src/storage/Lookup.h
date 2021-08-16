@@ -5,6 +5,9 @@
 #ifndef HAZELCHAIN_LOOKUP_H
 #define HAZELCHAIN_LOOKUP_H
 
+#include <iostream>
+#include <utility>
+#include <algorithm>
 #include <vector>
 
 template<typename K, typename V>
@@ -21,11 +24,11 @@ public:
     using const_iterator = iterator;
 
     Lookup(std::initializer_list<value_type> init) : container_(init) {
-        sort(container_.begin(), container_.end());
+        std::sort(container_.begin(), container_.end());
     }
 
-    explicit Lookup(std::vector<value_type> init) : container_(init) {
-        sort(container_.begin(), container_.end());
+    explicit Lookup(const std::vector<value_type> &init) : container_(init) {
+        std::sort(container_.begin(), container_.end());
     }
 
     const_iterator begin() const {
@@ -36,12 +39,13 @@ public:
         return container_.end();
     }
 
-    const_iterator find(const K &key) const {
+    template<typename Key>
+    const_iterator find(const Key &key) const {
         const_iterator it = std::lower_bound(
                 begin(),
                 end(),
                 key,
-                [](const value_type &p, const K key) {
+                [](const value_type &p, const Key &key) {
                     return p.first < key;
                 }
         );

@@ -2,7 +2,6 @@
 // Created by chris on 2021-08-13.
 //
 
-#include <cstdio>
 #include <utility>
 #include <winsock2.h>
 #include "server.h"
@@ -63,8 +62,8 @@ int node::Server::run() {
 
 
     log(constants::logger, info)
-    << "Waiting for incoming connections"
-    << logger::endl;
+            << "Waiting for incoming connections"
+            << logger::endl;
 
     int addrlen = sizeof(struct sockaddr_in);
     while (true) {
@@ -171,10 +170,14 @@ int node::Server::run() {
                             << inet_ntoa(address.sin_addr)
                             << ':'
                             << ntohs(address.sin_port)
-                            << " - "
+                            << " -> "
                             << buffer
                             << logger::endl;
-                    send(s, buffer, valread, 0);
+
+                    std::vector<std::string> args = util::split(buffer, '~');
+                    auto it = opcodes.find(args.at(0));
+                    args.erase(args.begin());
+                    _respond(s, address, it == opcodes.end() ? operation::null : it->second, args);
                 }
             }
         }
@@ -184,4 +187,37 @@ int node::Server::run() {
 //    WSACleanup();
 //
 //    return 0;
+}
+
+void node::Server::_respond(SOCKET s, sockaddr_in address, operation op, std::vector<std::string> args) {
+    using namespace std;
+
+    switch (op) {
+
+        case x00:
+            break;
+        case x01: {
+            log(constants::logger, info)
+                    << "0x01 received: "
+                    << args[0];
+            char *message = "ok lol\r\n";
+            send(s, message, strlen(message), 0);
+            break;
+        }
+        case x02:
+            break;
+        case null: {
+            log(constants::logger, warning)
+                    << "Peer at "
+                    << inet_ntoa(address.sin_addr)
+                    << ':'
+                    << ntohs(address.sin_port)
+                    << " sent an invalid opcode"
+                    << logger::endl;
+
+            char *message = "error: invalid opcode sent\r\n";
+            send(s, message, strlen(message), 0);
+            return;
+        }
+    }
 }
