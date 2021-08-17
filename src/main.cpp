@@ -20,9 +20,9 @@ int findNodes();
 
 
 int main(int argc, char **argv) {
-    node::Server s("server", 1234);
-    s.run();
-    return 0;
+//    node::Server s("server", 1234);
+//    s.run();
+//    return 0;
 
     loadSettings();
     if (!util::contains(argc, argv, "-nosync")) sync();
