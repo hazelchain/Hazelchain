@@ -166,18 +166,27 @@ int node::Server::run() {
                     clients[i] = 0;
                 } else {
                     buffer[valread] = '\0';
+                    buffer = util::remove(buffer, '\n');
+                    buffer = util::remove(buffer, '\r');
+                    std::cout << buffer;
                     log(constants::logger, debug)
                             << inet_ntoa(address.sin_addr)
                             << ':'
                             << ntohs(address.sin_port)
-                            << " -> "
+                            << "-> "
                             << buffer
                             << logger::endl;
 
                     std::vector<std::string> args = util::split(buffer, '~');
-                    auto it = opcodes.find(args.at(0));
-                    args.erase(args.begin());
-                    _respond(s, address, it == opcodes.end() ? operation::null : it->second, args);
+                    auto it = sendcodes.find(args.at(0));
+                    _respond(s, address,
+                             it == sendcodes.end()
+                             ? operation::null
+                             : it->second,
+                             args.size() == 1
+                             ? std::vector<std::string>{"none"}
+                             : args
+                    );
                 }
             }
         }
@@ -196,22 +205,24 @@ void node::Server::_respond(SOCKET s, sockaddr_in address, operation op, std::ve
 
         case x00:
             break;
-        case x01: {
+        case x01: { // ip request
             log(constants::logger, info)
-                    << "0x01 received: "
-                    << args[0];
+                    << inet_ntoa(address.sin_addr)
+                    << "-> "
+                    << "0x01: "
+                    << args[1]
+                    << logger::endl;
             char *message = "ok lol\r\n";
             send(s, message, strlen(message), 0);
-            break;
+            return;
         }
         case x02:
             break;
+        case xff: // acknowledgment
+            break;
         case null: {
             log(constants::logger, warning)
-                    << "Peer at "
                     << inet_ntoa(address.sin_addr)
-                    << ':'
-                    << ntohs(address.sin_port)
                     << " sent an invalid opcode"
                     << logger::endl;
 
@@ -220,4 +231,7 @@ void node::Server::_respond(SOCKET s, sockaddr_in address, operation op, std::ve
             return;
         }
     }
+
+    char *m = "0xff\r\n";
+    send(s, m, strlen(m), 0);
 }

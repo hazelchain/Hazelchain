@@ -1,7 +1,6 @@
 #include <json.hpp>
 #include "storage/logging/Logger.h"
 #include "constants.h"
-#include "node/client.h"
 #include "util/util.h"
 #include "node/server.h"
 

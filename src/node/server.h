@@ -17,14 +17,16 @@ namespace {
         x00,
         x01,
         x02,
+        xff,
         null
-        };
+    };
 
-    Lookup<std::string, operation> opcodes{
-        {"0x00", operation::x00},
-        {"0x01", operation::x01},
-        {"0x02", operation::x02},
-        };
+    Lookup<std::string, operation> sendcodes{
+            {"0x00", operation::x00}, // error
+            {"0x01", operation::x01}, // server welcome, expects client data back with same code
+            {"0x02", operation::x02}, //
+            {"0xff", operation::xff},
+    };
 }
 
 namespace node {
@@ -42,7 +44,6 @@ namespace node {
         explicit Server(std::string name, int port);
 
         int run();
-
 
     };
 }

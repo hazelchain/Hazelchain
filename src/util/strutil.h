@@ -5,6 +5,8 @@
 #ifndef HAZELCHAIN_STRUTIL_H
 #define HAZELCHAIN_STRUTIL_H
 
+#include <utility>
+
 #include "Math.h"
 
 namespace util {
@@ -31,15 +33,17 @@ namespace util {
 
     inline bool contains(int size, char **arr, const char *find);
 
+    inline char *remove(std::string str, char c);
+
+
     template<class T>
     inline std::string vectorToString(std::vector<T> in);
 
     inline std::string replace(std::string in, const std::string &a, const std::string &b);
 
-    inline std::vector<std::string> split(const std::string &in, const char a);
+    inline std::vector<std::string> split(const std::string &in, char a);
 
-    inline int count_of(const std::string &in, const char a);
-
+    inline int count_of(const std::string &in, char a);
 
     inline std::string string_of(char c, int amount) {
         std::stringstream ss;
@@ -93,7 +97,7 @@ namespace util {
         return ss.str();
     }
 
-    inline std::string concat(std::initializer_list <std::string> in) {
+    inline std::string concat(std::initializer_list<std::string> in) {
         std::stringstream ss;
 
         for (const std::string &p : in) {
@@ -132,7 +136,7 @@ namespace util {
     }
 
     template<class T>
-    inline std::string vectorToString(std::vector <T> in) {
+    inline std::string vectorToString(std::vector<T> in) {
         return std::string{in.begin(), in.end()};
     }
 
@@ -148,8 +152,8 @@ namespace util {
         return in;
     }
 
-    inline std::vector <std::string> split(const std::string &in, const char a) {
-        std::vector <std::string> out;
+    inline std::vector<std::string> split(const std::string &in, const char a) {
+        std::vector<std::string> out;
         std::string left = in;
         int total = count_of(in, a);
         for (int i = 0; i < total; ++i) {
@@ -169,6 +173,11 @@ namespace util {
         int t = 0;
         for (char i : in) if (i == a) ++t;
         return t;
+    }
+
+    inline char *remove(std::string str, char c) {
+        str.erase(std::remove(str.begin(), str.end(), c), str.end());
+        return const_cast<char *>(str.c_str());
     }
 }
 
