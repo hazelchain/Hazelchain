@@ -100,7 +100,7 @@ namespace util {
     inline std::string concat(std::initializer_list<std::string> in) {
         std::stringstream ss;
 
-        for (const std::string &p : in) {
+        for (const std::string &p: in) {
             ss << p;
         }
 
@@ -171,7 +171,7 @@ namespace util {
 
     inline int count_of(const std::string &in, const char a) {
         int t = 0;
-        for (char i : in) if (i == a) ++t;
+        for (char i: in) if (i == a) ++t;
         return t;
     }
 

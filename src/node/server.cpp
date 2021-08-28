@@ -12,9 +12,11 @@ node::Server::Server(std::string name, int port)
           name_(std::move(name)) {
 }
 
+node::Server::Server() : name_("server"), port_(1234) {
+}
 
 int node::Server::run() {
-    SOCKET /*self,*/ new_socket/*, s*/;
+    SOCKET new_socket;
     sockaddr_in server{}, address{};
     int MAXRECV = 1024;
     fd_set readfds;
@@ -26,17 +28,17 @@ int node::Server::run() {
             << "..."
             << logger::endl;
 
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
+    if (WSAStartup(MAKEWORD(2, 2), &wsa_) != 0) {
         log(constants::logger, error)
-                << "Failed: "
+                << "Failed to load server: "
                 << WSAGetLastError()
                 << logger::endl;
         return 1;
     }
 
-    if ((self = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+    if ((self_ = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
         log(constants::logger, error)
-                << "Could not create socket: "
+                << "Could not create server socket: "
                 << WSAGetLastError()
                 << logger::endl;
         return 1;
@@ -46,32 +48,32 @@ int node::Server::run() {
     server.sin_addr.s_addr = INADDR_ANY;
     server.sin_port = htons(port_);
 
-    if (bind(self, (struct sockaddr *) &server, sizeof(server)) == SOCKET_ERROR) {
+    if (bind(self_, (struct sockaddr *) &server, sizeof(server)) == SOCKET_ERROR) {
         log(constants::logger, error)
-                << "Bind failed: "
+                << "Server Bind failed: "
                 << WSAGetLastError()
                 << logger::endl;
         return 1;
     }
 
-    listen(self, 3);
+    listen(self_, 3);
 
     log(constants::logger, info)
-            << "loaded "
+            << "Server loaded "
             << logger::endl;
 
 
     log(constants::logger, info)
-            << "Waiting for incoming connections"
+            << "Ready to receive incoming connections"
             << logger::endl;
 
     int addrlen = sizeof(struct sockaddr_in);
     while (true) {
         FD_ZERO(&readfds);
-        FD_SET(self, &readfds);
+        FD_SET(self_, &readfds);
 
         for (auto[i, s] = std::tuple{0, SOCKET()}; i < CONNECT_MAX; ++i) {
-            s = clients[i];
+            s = clients_[i];
             if (s > 0) {
                 FD_SET(s, &readfds);
             }
@@ -92,8 +94,8 @@ int node::Server::run() {
             return 1;
         }
 
-        if (FD_ISSET(self, &readfds)) {
-            if ((new_socket = accept(self, (struct sockaddr *) &address, (int *) &addrlen)) < 0) {
+        if (FD_ISSET(self_, &readfds)) {
+            if ((new_socket = accept(self_, (struct sockaddr *) &address, (int *) &addrlen)) < 0) {
                 log(constants::logger, info)
                         << "accept"
                         << logger::endl;
@@ -119,8 +121,8 @@ int node::Server::run() {
                     << logger::endl;
 
             for (int i = 0; i < CONNECT_MAX; ++i) {
-                if (clients[i] == 0) {
-                    clients[i] = new_socket;
+                if (clients_[i] == 0) {
+                    clients_[i] = new_socket;
                     log(constants::logger, info)
                             << "Adding  to list of sockets at index "
                             << i
@@ -130,7 +132,7 @@ int node::Server::run() {
             }
         }
         for (auto[i, s] = std::tuple{0, SOCKET()}; i < CONNECT_MAX; ++i) {
-            s = clients[i];
+            s = clients_[i];
             if (FD_ISSET(s, &readfds)) {
                 getpeername(s, (struct sockaddr *) &address, (int *) &addrlen);
                 int valread = recv(s, buffer, MAXRECV, 0);
@@ -146,7 +148,7 @@ int node::Server::run() {
                                 << logger::endl;
 
                         closesocket(s);
-                        clients[i] = 0;
+                        clients_[i] = 0;
                     } else {
                         log(constants::logger, error)
                                 << "recv failed: "
@@ -163,7 +165,7 @@ int node::Server::run() {
                             << logger::endl;
 
                     closesocket(s);
-                    clients[i] = 0;
+                    clients_[i] = 0;
                 } else {
                     buffer[valread] = '\0';
                     buffer = util::remove(buffer, '\n');
@@ -176,17 +178,7 @@ int node::Server::run() {
                             << "-> "
                             << buffer
                             << logger::endl;
-
-                    std::vector<std::string> args = util::split(buffer, '~');
-                    auto it = sendcodes.find(args.at(0));
-                    _respond(s, address,
-                             it == sendcodes.end()
-                             ? operation::null
-                             : it->second,
-                             args.size() == 1
-                             ? std::vector<std::string>{"none"}
-                             : args
-                    );
+                    send(s, buffer, strlen(buffer), 0);
                 }
             }
         }
@@ -196,42 +188,4 @@ int node::Server::run() {
 //    WSACleanup();
 //
 //    return 0;
-}
-
-void node::Server::_respond(SOCKET s, sockaddr_in address, operation op, std::vector<std::string> args) {
-    using namespace std;
-
-    switch (op) {
-
-        case x00:
-            break;
-        case x01: { // ip request
-            log(constants::logger, info)
-                    << inet_ntoa(address.sin_addr)
-                    << "-> "
-                    << "0x01: "
-                    << args[1]
-                    << logger::endl;
-            char *message = "ok lol\r\n";
-            send(s, message, strlen(message), 0);
-            return;
-        }
-        case x02:
-            break;
-        case xff: // acknowledgment
-            break;
-        case null: {
-            log(constants::logger, warning)
-                    << inet_ntoa(address.sin_addr)
-                    << " sent an invalid opcode"
-                    << logger::endl;
-
-            char *message = "error: invalid opcode sent\r\n";
-            send(s, message, strlen(message), 0);
-            return;
-        }
-    }
-
-    char *m = "0xff\r\n";
-    send(s, m, strlen(m), 0);
 }

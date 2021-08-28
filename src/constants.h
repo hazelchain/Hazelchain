@@ -12,7 +12,7 @@
 using json = nlohmann::json;
 
 namespace constants {
-    inline Logger logger(
+    inline static Logger logger(
             util::concat(
                     util::currentTime("[%d-%m-%y  %H:%M:%S] "),
                     "-log.txt"
@@ -20,7 +20,7 @@ namespace constants {
             std::cout
     );
 
-    inline json settings = {};
+    inline static json settings = {};
 }
 
 #endif //HAZELCHAIN_CONSTANTS_H
