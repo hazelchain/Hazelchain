@@ -1,9 +1,9 @@
 #include <json.hpp>
+#include <thread>
 #include "storage/logging/Logger.h"
 #include "constants.h"
 #include "util/util.h"
-#include "node/server.h"
-#include "node/Packet.h"
+#include "node/Server.h"
 
 #ifdef _WIN32
 #define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
@@ -19,7 +19,7 @@ void generateDir(const char *name);
 
 int findNodes();
 
-static node::Server server;
+static Server server;
 
 int main(int argc, char **argv) {
     loadSettings();
@@ -77,16 +77,15 @@ void sync() {
             << logger::endl;
 
     log(constants::logger, info)
+            << "Indexing and checking blocks"
+            << logger::endl;
+
+    log(constants::logger, info)
             << "Starting node server on port "
             << (std::int32_t) constants::settings["server_port"]
             << logger::endl;
 
-    server = node::Server("server", constants::settings["server_port"]);
-    server.run();
-
-    log(constants::logger, info)
-            << "Indexing and checking blocks"
-            << logger::endl;
+    server.initialize(constants::settings["server_port"]);
 
     //TODO: implement syncing database to other nodes;
 }

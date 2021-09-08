@@ -3,43 +3,37 @@ project(Hazelchain)
 
 set(CMAKE_CXX_STANDARD 17)
 
-if (WIN32)
-    set(CMAKE_TOOLCHAIN_FILE "C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
-else ()
-    set(CMAKE_TOOLCHAIN_FILE "/mnt/c/dev/vcpkg/scripts/buildsystems/vcpkg.cmake")
-endif ()
-
 find_package(unofficial-sqlite3 REQUIRED)
 find_package(OpenSSL REQUIRED)
 
 add_executable(
         ${PROJECT_NAME}
         src/main.cpp
-        src/Block.cpp src/Block.h
+        src/constants.h
+        src/Block.h src/Block.cpp
+        src/Transaction.cpp src/Transaction.h
         src/util/util.h
         src/util/strutil.h
         src/util/Http.h
-        src/util/Math.h
-        src/util/Math.cpp
+        src/util/Math.h src/util/Math.cpp
         src/util/sha256.h
-        src/storage/tree/TransactionTree.cpp src/storage/tree/TransactionTree.h
-        src/Transaction.cpp src/Transaction.h
-        src/storage/tree/TransactionNode.cpp src/storage/tree/TransactionNode.h
-        src/storage/logging/Logger.cpp src/storage/logging/Logger.h
-        src/constants.h
-        src/node/server.h src/node/server.cpp
         src/storage/Lookup.h
-        src/node/Packet.h)
+        src/storage/logging/Logger.h src/storage/logging/Logger.cpp
+        src/storage/tree/TransactionTree.h src/storage/tree/TransactionTree.cpp
+        src/storage/tree/TransactionNode.h src/storage/tree/TransactionNode.cpp
+        src/node/Server.h src/node/Server.cpp
+        src/node/Packet.h src/node/Packet.cpp
+)
+
+if (WIN32)
+    target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
+endif ()
 
 target_link_libraries(
         ${PROJECT_NAME}
         unofficial::sqlite3::sqlite3
         OpenSSL::SSL OpenSSL::Crypto
 )
-
-if (WIN32)
-    target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
-endif ()
 
 include_directories(
         libs/json

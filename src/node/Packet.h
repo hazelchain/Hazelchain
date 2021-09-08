@@ -10,6 +10,14 @@
 #include <cstddef>
 #include <variant>
 #include <typeinfo>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <cstring>
+
+#define HEADER_SIZE 12
+#define NODE_VERSION 1
+#define INT_SIZE 4
 
 enum ServerPackets {
     welcome,
@@ -22,198 +30,148 @@ enum ClientPackets {
 class Packet {
 private:
     std::vector<unsigned char> buffer_;
-    unsigned char *readableBuffer_{};
-    int readPos_;
-
-    /**
-     * Reads the following bytes of the readable buffer corresponding to the size of
-     * the type passed in. read as little endian
-     * @tparam T - Any primative type, except string
-     * @param rev - How much spaces to go back into buffer, default is zero
-     * @return the same type processed from the readable buffer in little endian
-     * form
-     */
-    template<typename T>
-    T _read(int rev = 0) {
-        unsigned char p[sizeof(T)];
-        for (int i = 0; i < sizeof(T); ++i) {
-            p[i] = readableBuffer_[readPos_ - rev + i];
-        }
-        return (*(T *) p);
-    }
-
+    unsigned int readPos_ = 0;
+    int size_ = -1;
 public:
-    Packet() {
-        readPos_ = 0;
-    }
+    const bool writable_;
+    int id;
 
-    explicit Packet(int id_) {
-        readPos_ = 0;
+    explicit Packet(int id_);
 
-        Write(id_);
-    }
+    explicit Packet(std::vector<char> in);
 
 // region functions
 
-    void SetBytes(unsigned char data[]) {
-        Write(data);
-        readableBuffer_ = &buffer_[0];
-    }
+    void SetBytes(unsigned char *data);
 
-    void WriteLength() {
-        buffer_.insert(buffer_.begin(), buffer_.size());
-    }
+    unsigned char operator[](int pos);
 
-    void InsertInt(int value) {
-        buffer_.insert(buffer_.begin(), value);
-    }
+    std::vector<unsigned char>::iterator begin();
 
-    unsigned char *toArray() {
-        readableBuffer_ = &buffer_[0];
-        return readableBuffer_;
-    }
+    std::vector<unsigned char>::iterator end();
 
-    size_t Length() {
-        return buffer_.size();
-    }
+    void writeLength();
 
-    size_t UnreadLength() {
-        return Length() - readPos_;
-    }
+    /**
+     * Turns the buffer into an array
+     * Be sure to use Packet::size() when indexing array
+     * @return buffer as an array
+     */
+    unsigned char *toArray();
 
-    void Reset(bool shouldReset = true) {
-        if (shouldReset) {
-            buffer_.clear();
-            readableBuffer_ = nullptr;
-            readPos_ = 0;
-        } else {
-            readPos_ -= 4;
-        }
-    }
+    size_t size();
+
+    size_t UnreadLength();
+
+    void Reset(bool shouldReset = true);
+
+    std::string to_string();
+
+    int getId();
+
+    void movePos(int amount);
+
+    void print(const std::string &between = "\r\n");
 
 // endregion
 // region Write Data
 
-    void Write(unsigned char *value, size_t size) {
-        buffer_.insert(buffer_.end(), value, value + size);
-    }
+    Packet &operator<<(unsigned char value);
 
-    void Write(unsigned char value) {
-        buffer_.push_back(value);
-    }
+    Packet &operator<<(short value);
 
-    void Write(short value) {
-        Write(reinterpret_cast<unsigned char *>(&value), sizeof(short));
-    }
+    Packet &operator<<(int value);
 
-    void Write(int value) {
-        Write(reinterpret_cast<unsigned char *>(&value), sizeof(int));
-    }
+    Packet &operator<<(long value);
 
-    void Write(long value) {
-        Write(reinterpret_cast<unsigned char *>(&value), sizeof(long));
-    }
+    Packet &operator<<(float value);
 
-    void Write(float value) {
-        Write(reinterpret_cast<unsigned char *>(&value), sizeof(float));
-    }
+    Packet &operator<<(bool value);
 
-    void Write(bool value) {
-        Write(reinterpret_cast<unsigned char *>(&value), sizeof(bool));
-    }
-
-    void Write(const std::string &value) {
-        auto *p = value.c_str();
-        if (value.size() > 1) {
-            Write(reinterpret_cast<unsigned char *>(const_cast<char *>(p)), value.size() + 1);
-        } else {
-            Write(reinterpret_cast<unsigned char *>(p[0]), sizeof(char));
-        }
-    }
+    Packet &operator<<(const std::string &value);
 
 // endregion
 // region Read Data
 
-    unsigned char ReadByte(bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-            if (moveReadPos) ++readPos_;
-            return _read<unsigned char>(1);
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'byte'!"
-                    << logger::endl;
-        }
+    unsigned char ReadByte(bool moveReadPos = true);
+
+    unsigned char *ReadBytes(size_t length, bool moveReadPos = true);
+
+    std::string readString(bool moveReadPos = true);
+
+    short ReadShort(bool moveReadPos = true);
+
+    int ReadInt(bool moveReadPos = true);
+
+    long ReadLong(bool moveReadPos = true);
+
+    float ReadFloat(bool moveReadPos = true);
+
+    bool ReadBool(bool moveReadPos = true);
+
+// endregion
+
+private:
+// region Helpers
+    void _write(unsigned char *value, size_t size) {
+        buffer_.insert(buffer_.end(), value, value + size);
     }
 
-    unsigned char *ReadBytes(size_t length, bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-            std::vector<unsigned char> value(
-                    &buffer_[readPos_],
-                    &buffer_[readPos_] + length
-            );
-            if (moveReadPos) ++readPos_;
-            unsigned char *out = &value[0];
-            return out;
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'byte[]'!"
-                    << logger::endl;
+    template<typename T>
+    unsigned char *_toBytes(T in) {
+        auto *p = reinterpret_cast<unsigned char *>(&in);
+        auto *out = (unsigned char *) malloc(sizeof(T));
+        for (int i = 0; i < sizeof(T); ++i) {
+            out[i] = p[i];
         }
+        return out;
     }
 
-    short ReadShort(bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-            if (moveReadPos) readPos_ += 2;
-            return _read<short>(2);
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'short'!"
-                    << logger::endl;
+    template<typename T>
+    T _read(bool moveReadPos = true) {
+        unsigned char p[sizeof(T)];
+        for (int i = 0; i < sizeof(T); ++i) {
+            p[i] = buffer_[i + readPos_];
         }
+        if (moveReadPos) readPos_ += sizeof(T);
+        return *(T *) p;
     }
 
-    int ReadInt(bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-            return _read<int>(4);
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'int'!"
-                    << logger::endl;
+    template<typename T>
+    T _read(bool moveReadPos = true, int rev = 0) {
+        unsigned char p[sizeof(T)];
+        for (int i = 0; i < sizeof(T); ++i) {
+            p[i] = buffer_[i + readPos_ - rev];
         }
+        if (moveReadPos) readPos_ += sizeof(T);
+        return *(T *) p;
     }
 
-    long ReadLong(bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-            readPos_ += moveReadPos ? 8 : 0;
-            return _read<long>(8);
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'long'!"
-                    << logger::endl;
+    template<typename T>
+    T _read(int index) {
+        unsigned char p[sizeof(T)];
+        for (int i = 0; i < sizeof(T); ++i) {
+            p[i] = buffer_[i + index];
         }
+        return *(T *) p;
     }
 
-    float ReadFloat(bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-
-            readPos_ += moveReadPos ? 4 : 0;
-            return _read<float>(4);
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'float'!"
-                    << logger::endl;
+    template<typename T>
+    static T _read(std::vector<char> buffer, int index = 0) {
+        unsigned char p[sizeof(T)];
+        for (int i = 0; i < sizeof(T); ++i) {
+            p[i] = buffer[i + index];
         }
+        return *(T *) p;
     }
 
-    bool ReadBool(bool moveReadPos = true) {
-        if (buffer_.size() > readPos_) {
-            readPos_ += moveReadPos ? 1 : 0;
-            return _read<bool>(1);
-        } else {
-            log(constants::logger, error)
-                    << "Could not read value of type 'int'!"
-                    << logger::endl;
-        }
+    /**
+     * Used for padding strings with 2 extra null characters so that the string
+     * can be recognised when decoded
+     */
+    void _pad() {
+        buffer_.push_back('\0');
+        buffer_.push_back('\0');
     }
 
 // endregion

@@ -29,4 +29,4 @@ for /f "tokens=*" %%i in ('powershell -noprofile -command "%PSCMD%"') do SET %1=
 
 @REM k, so in a powershell do the following```
 @REM cd / && ls dev
-@REM ``` and send me the output
+@REM ``` and sendData me the output
