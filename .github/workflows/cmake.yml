@@ -48,7 +48,7 @@ jobs:
         shell: pwsh
 
       - name: Create Build Directory
-        run: mkdir build
+        run: mkdir cmake-build-mingw-x64
 
       - name: Build
 #        run: cmake --target Hazelchain --preset "MinGW x64"
