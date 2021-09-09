@@ -51,4 +51,5 @@ jobs:
         run: mkdir build
 
       - name: Build
-        run: cmake --target Hazelchain --preset "MinGW x64"
+#        run: cmake --target Hazelchain --preset "MinGW x64"
+        run: cmake --build --preset "MinGW x64"
