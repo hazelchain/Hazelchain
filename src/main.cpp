@@ -85,7 +85,7 @@ void sync() {
             << (std::int32_t) constants::settings["server_port"]
             << logger::endl;
 
-    server.initialize(constants::settings["server_port"]);
+//    server.initialize(constants::settings["server_port"]);
 
     //TODO: implement syncing database to other nodes;
 }

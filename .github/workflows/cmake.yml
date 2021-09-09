@@ -38,7 +38,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: egor-tensin/setup-mingw@v2
+      - name: install dependencies
+        run: |
+          choco install cmake
+          cmake --version
 
       - name: Run windows.bat
         run: ./windows.bat
@@ -47,8 +50,5 @@ jobs:
       - name: Create Build Directory
         run: mkdir build
 
-      - name: test
-        run: cmake --version
-
       - name: Build
-        run: cmake --build ${{github.workspace}}\build --target Hazelchain -j 6 --preset "MinGW x64"
+        run: cmake --target Hazelchain -j 6 --preset "MinGW x64"

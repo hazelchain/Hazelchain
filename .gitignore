@@ -297,4 +297,7 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+# vcpkg
+vcpkg/
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,c++,cmake,python
