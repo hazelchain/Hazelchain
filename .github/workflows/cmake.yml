@@ -23,9 +23,11 @@ jobs:
           choco install cmake
           cmake --version
 
-      - name: Run windows.bat
-        run: sh ./.github/scripts/windows.bat
-        shell: pwsh
+      - name: Run vcpkg
+        uses: lukka/run-vcpkg@v4
+        with:
+          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
 
       - name: Create Build Directory
         run: mkdir cmake-build-mingw-x64
@@ -35,6 +37,7 @@ jobs:
 
       - name: Run
         run: cmake --build --preset "MinGW x64"
+
   linux:
     name: Run on Ubuntu latest
     runs-on: ubuntu-latest
@@ -47,9 +50,11 @@ jobs:
           sudo apt-get install cmake
           cmake --version
 
-      - name: Run linux.sh
-        run: sh ./.github/scripts/linux.sh
-        shell: bash
+      - name: Run vcpkg
+        uses: lukka/run-vcpkg@v4
+        with:
+          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
+          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
 
       - name: Create Build Directory
         run: mkdir cmake-build-wsl-x64

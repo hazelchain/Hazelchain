@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" uploadOnCheckin="2d4792cc-1102-4547-a4cc-0fd3f5b1f6b8" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="WSL (2d4792cc-1102-4547-a4cc-0fd3f5b1f6b8)">
         <serverdata>
@@ -17,6 +17,5 @@
         </serverdata>
       </paths>
     </serverData>
-    <option name="myUploadOnCheckinName" value="WSL (2d4792cc-1102-4547-a4cc-0fd3f5b1f6b8)" />
   </component>
 </project>
