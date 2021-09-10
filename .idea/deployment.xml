@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" uploadOnCheckin="2d4792cc-1102-4547-a4cc-0fd3f5b1f6b8" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="WSL (2d4792cc-1102-4547-a4cc-0fd3f5b1f6b8)">
         <serverdata>
@@ -9,6 +9,14 @@
           </mappings>
         </serverdata>
       </paths>
+      <paths name="WSL (af243210-d213-4cfe-8b3b-31b50571c7ac)">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
+    <option name="myUploadOnCheckinName" value="WSL (2d4792cc-1102-4547-a4cc-0fd3f5b1f6b8)" />
   </component>
 </project>

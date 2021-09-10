@@ -1,5 +1,5 @@
 # WARNING: not currently developing for linux -- this won't work
-cd ${{github.workspace}}
+cd ../../
 
 if [test -f "vcpkg\vcpkg.exe"]; then
   git clone https://github.com/Microsoft/vcpkg.git
