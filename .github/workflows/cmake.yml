@@ -48,7 +48,7 @@ jobs:
           cmake --version
 
       - name: Run linux.sh
-        run: sh ./linux.sh
+        run: sh ./${{github.workspace}}/linux.sh
         shell: bash
         working-directory: ${{github.workspace}}/vcpkg
 
