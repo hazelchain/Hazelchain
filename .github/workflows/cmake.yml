@@ -54,7 +54,7 @@ jobs:
         run: mkdir cmake-build-wsl-x64
 
       - name: Build
-        run: cmake --preset "MinGW x64-debug"
+        run: cmake --preset "WSL x64-debug"
 
       - name: Run
         run: cmake --build --preset "MinGW x64"
