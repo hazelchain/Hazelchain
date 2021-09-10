@@ -48,13 +48,9 @@ jobs:
           cmake --version
 
       - name: Run linux.sh
-        run: |
-          if [ ! -d "vcpkg" ]; then git clone https://github.com/Microsoft/vcpkg.git; fi
-          cd vcpkg
-
-          sh ./${{github.workspace}}/bootstrap-vcpkg.sh -disableMetrics && \
-          sh ./${{github.workspace}}/vcpkg.exe install --recurse openssl:x64-windows sqlite3:x64-windows && \
-          sh ./${{github.workspace}}/vcpkg integrate install
+        run: sh ./linux.sh
+        shell: bash
+        working-directory: ${{github.workspace}}/vcpkg
 
       - name: Create Build Directory
         run: mkdir cmake-build-wsl-x64
