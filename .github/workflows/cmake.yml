@@ -51,7 +51,8 @@ jobs:
         run: mkdir cmake-build-mingw-x64
 
       - name: Build
-        run: cmake --preset "MinGW x64"
+        run: cmake --preset "MinGW x64-debug"
+#        run: cmake -G "CodeBlocks - MinGW Makefiles" -DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}vcpkg\scripts\buildsystems\vcpkg.cmake -DVCPKG_TARGET_TRIPLET=x64-windows
 
       - name: Run
         #        run: cmake --target Hazelchain --preset "MinGW x64"
