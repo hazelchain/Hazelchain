@@ -1,7 +1,7 @@
 # WARNING: not currently developing for linux -- this won't work
 cd ../../
 
-if [[ -e "vcpkg\vcpkg.exe" ]]; then
+if [[ --f "vcpkg\vcpkg.exe" ]]; then
   git clone https://github.com/Microsoft/vcpkg.git
 fi
 
