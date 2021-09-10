@@ -1,5 +1,5 @@
 @echo off
-
+cd ../../
 if not exist vcpkg\vcpkg.exe ( git clone https://github.com/Microsoft/vcpkg.git )
 cd vcpkg
 
