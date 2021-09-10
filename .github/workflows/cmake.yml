@@ -36,7 +36,7 @@ jobs:
       - name: Run
         run: cmake --build --preset "MinGW x64"
   linux:
-    name: Run on Windows latest
+    name: Run on Ubuntu latest
     runs-on: ubuntu-latest
 
     steps:
