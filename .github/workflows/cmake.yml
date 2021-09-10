@@ -24,7 +24,7 @@ jobs:
           cmake --version
 
       - name: Run windows.bat
-        run: ./windows.bat
+        run: sh ./.github/scripts/windows.bat
         shell: pwsh
 
       - name: Create Build Directory
@@ -48,11 +48,8 @@ jobs:
           cmake --version
 
       - name: Run linux.sh
-        run: |
-          ls
-          ./${{github.workspace}}/linux.sh
+        run: sh ./.github/scripts/linux.sh
         shell: bash
-        working-directory: ${{github.workspace}}/vcpkg
 
       - name: Create Build Directory
         run: mkdir cmake-build-wsl-x64
