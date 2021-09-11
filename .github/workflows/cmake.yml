@@ -23,6 +23,8 @@ jobs:
             triplet: x64-windows
           - os: ubuntu-latest
             triplet: x64-linux
+          - os: macos-latest
+            triplet: x64-osx
     env:
       CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir/
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
@@ -46,72 +48,74 @@ jobs:
           key: |
             ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
 
-#      - name: Show content of workspace after cache has been restored
-#        run: find $RUNNER_WORKSPACE
-#        shell: bash
-      # On Windows runners, let's ensure to have the Developer Command Prompt environment setup correctly. As used here the Developer Command Prompt created is targeting x64 and using the default the Windows SDK.
+      - name: Show content of workspace after cache has been restored
+        run: find $RUNNER_WORKSPACE
+        shell: bash
+
       - uses: ilammy/msvc-dev-cmd@v1
-      # Run CMake to generate Ninja project files, using the vcpkg's toolchain file to resolve and install the dependencies as specified in vcpkg.json.
+
       - name: Install dependencies and generate project files
         run: |
           cmake -S "${{ github.workspace }}/vcpkg_manifest" -B "${{ env.CMAKE_BUILD_DIR }}" -GNinja -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
-      # Build the whole project with Ninja (which is spawn by CMake).
+
       - name: Build
         run: |
           cmake --build "${{ env.CMAKE_BUILD_DIR }}"
+
       - name: Show content of workspace at its completion
         run: find $RUNNER_WORKSPACE
         shell: bash
-  windows:
-    name: Run on Windows latest
-    runs-on: windows-latest
 
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: install dependencies
-        run: |
-          choco install cmake
-          cmake --version
-
-      - name: Run vcpkg
-        uses: lukka/run-vcpkg@v4
-        with:
-          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-
-      - name: Create Build Directory
-        run: mkdir cmake-build-mingw-x64
-
-      - name: Build
-        run: cmake --preset "MinGW x64-debug"
-
-      - name: Run
-        run: cmake --build --preset "MinGW x64"
-
-  linux:
-    name: Run on Ubuntu latest
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: install dependencies
-        run: |
-          sudo apt-get install cmake
-          cmake --version
-
-      - name: Run vcpkg
-        uses: lukka/run-vcpkg@v4
-        with:
-          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
-          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-
-      - name: Create Build Directory
-        run: mkdir cmake-build-wsl-x64
-
-      - name: Build
-        run: cmake --preset "WSL x64-debug"
-
-      - name: Run
-        run: cmake --build --preset "MinGW x64"
+#  windows:
+#    name: Run on Windows latest
+#    runs-on: windows-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: install dependencies
+#        run: |
+#          choco install cmake
+#          cmake --version
+#
+#      - name: Run vcpkg
+#        uses: lukka/run-vcpkg@v4
+#        with:
+#          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
+#          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+#
+#      - name: Create Build Directory
+#        run: mkdir cmake-build-mingw-x64
+#
+#      - name: Build
+#        run: cmake --preset "MinGW x64-debug"
+#
+#      - name: Run
+#        run: cmake --build --preset "MinGW x64"
+#
+#  linux:
+#    name: Run on Ubuntu latest
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#
+#      - name: install dependencies
+#        run: |
+#          sudo apt-get install cmake
+#          cmake --version
+#
+#      - name: Run vcpkg
+#        uses: lukka/run-vcpkg@v4
+#        with:
+#          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
+#          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
+#
+#      - name: Create Build Directory
+#        run: mkdir cmake-build-wsl-x64
+#
+#      - name: Build
+#        run: cmake --preset "WSL x64-debug"
+#
+#      - name: Run
+#        run: cmake --build --preset "MinGW x64"
