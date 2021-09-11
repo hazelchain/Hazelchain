@@ -15,11 +15,11 @@ jobs:
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [
             windows-latest,
             ubuntu-latest,
-          # macos-latest,
         ]
         include:
           - os: windows-latest
@@ -33,25 +33,36 @@ jobs:
 
     env:
       CMAKE_BUILD_DIR: ${{ github.workspace }}/build/
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: true
+
       - uses: lukka/get-cmake@latest
 
-      - name: Restore artifacts / setup vcpkg
-        uses: lukka/run-vcpkg@v7
+      - name: Restore vcpkg
+        uses: actions/cache@v2
         with:
-          vcpkgArguments: '@${{ env.VCPKGRESPONSEFILE }}'
-          vcpkgGitCommitId: ${{ matrix.vcpkgId }}
-          vcpkgTriplet: ${{ matrix.triplet }}
+          path: |
+            ${{ env.CMAKE_BUILD_DIR }}/vcpkg_installed/
+            ${{ env.VCPKG_ROOT }}
+            !${{ env.VCPKG_ROOT }}/buildtrees
+            !${{ env.VCPKG_ROOT }}/packages
+            !${{ env.VCPKG_ROOT }}/downloads
 
-      - run: '$VCPKG_ROOT/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}'
+          key: |
+            ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
 
-      - name: Run Cmake with Ninja
-        uses: lukka/run-cmake@main
-        with:
-          cmakeListsTxtPath: '${{ github.workspace }}'
-          useVcpkgToolchainFile: true
-#          buildWithCMakeArgs:
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install dependencies
+        run: |
+          cmake -S "${{ github.workspace }}/vcpkg_manifest" -B "${{ env.CMAKE_BUILD_DIR }}" -GNinja -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
+
+      - run: '${{ env.VCPKG_ROOT }}/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}'
+
+      - name: Build
+        run: |
+          cmake --build "${{ env.CMAKE_BUILD_DIR }}"
