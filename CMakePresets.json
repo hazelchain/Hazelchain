@@ -18,7 +18,7 @@
       "name": "MinGW x64-debug",
       "displayName": "MinGW",
       "description": "run cmake in mingw x64",
-      "generator": "CodeBlocks - MinGW Makefiles",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}\\cmake-build-mingw-x64",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -32,11 +32,11 @@
     },
     {
       "inherits": "Base",
-      "name": "WSL x64-debug",
-      "displayName": "Windows Linux subsystem",
+      "name": "Ubuntu x64-debug",
+      "displayName": "Ubuntu",
       "description": "run cmake in linux x64",
-      "generator": "CodeBlocks - Unix Makefiles",
-      "binaryDir": "${sourceDir}\\cmake-build-wsl-x64",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}\\cmake-build-ubuntu-x64",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "VCPKG_TARGET_TRIPLET": "x64-linux"
@@ -54,7 +54,7 @@
       "configurePreset": "MinGW x64-debug"
     },
     {
-      "name": "WSL x64",
+      "name": "Ubuntu x64",
       "configurePreset": "WSL x64-debug"
     }
   ]

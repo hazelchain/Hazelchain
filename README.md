@@ -37,10 +37,13 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ### Steps:
 
-1. download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
-2. extract the contents to an empty folder.
-3. Download mingw x64 from [here](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
-4. Run the bootstrapper (*Keep in mind the files to be downloaded might be large*)
+1. Follow [these](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages) steps to install Ninja
+2. Add Ninja to your path
+3. Download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
+4. Extract the contents to an empty folder.
+5. Download mingw x64
+   from [here](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
+6. Run the bootstrapper (*Keep in mind the files to be downloaded might be large*)
     - If you're using linux:
         1. Open a bash
         2. Run `linux.sh`
@@ -49,9 +52,8 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
         2. Open Windows Powershell
         3. Run `windows.bat` in powershell
 
-4. Open and run the project as a Cmake project in your IDE
-5. set the cmake as the directory of your chosen cmake
-6. be sure to set the cmake preset as CMakePresets.json
+7. Open the project as a Cmake project in your preferred IDE
+8. Set the cmake preset as CMakePresets.json
 
 ---
 

@@ -12,7 +12,7 @@ env:
 
 jobs:
   job:
-    name: ${{ matrix.os }}-hosted-pure
+    name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -24,11 +24,11 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgPackages: 'openssl:x64-windows sqlite3:x64-windows'
+            vcpkgPackages: 'openssl sqlite3'
             vcpkgId: 5568f110b509a9fd90711978a7cb76bae75bb092
           - os: ubuntu-latest
             triplet: x64-linux
-            vcpkgPackages: 'openssl:x64-linux sqlite3:x64-linux'
+            vcpkgPackages: 'openssl sqlite3'
             vcpkgId: 5568f110b509a9fd90711978a7cb76bae75bb092
 
     env:
@@ -45,75 +45,13 @@ jobs:
         with:
           setupOnly: true
           vcpkgGitCommitId: ${{ matrix.vcpkgId }}
+          vcpkhTriplet: ${{ matrix.triplet }}
 
-      - run: $VCPKG_ROOT/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}
+      - run: '$VCPKG_ROOT/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}'
 
-      - name: Load files
-        run: cmake --preset "MinGW x64-debug"
-        if: matrix.os == 'windows-latest'
-
-      - name: Load files
-        run: cmake --preset "MinGW x64-debug"
-        if: matrix.os == 'ubuntu-latest'
-
-      - name: Build
-        run: cmake --build --preset "MinGW x64"
-        if: matrix.os == 'windows-latest'
-
-      - name: Build
-        run: cmake --build --preset "MinGW x64"
-        if: matrix.os == 'ubuntu-latest'
-
-#  windows:
-#    name: Run on Windows latest
-#    runs-on: windows-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: install dependencies
-#        run: |
-#          choco install cmake
-#          cmake --version
-#
-#      - name: Run vcpkg
-#        uses: lukka/run-vcpkg@v4
-#        with:
-#          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
-#          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-#
-#      - name: Create Build Directory
-#        run: mkdir cmake-build-mingw-x64
-#
-#      - name: Build
-#        run: cmake --preset "MinGW x64-debug"
-#
-#      - name: Run
-#        run: cmake --build --preset "MinGW x64"
-#
-#  linux:
-#    name: Run on Ubuntu latest
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: install dependencies
-#        run: |
-#          sudo apt-get install cmake
-#          cmake --version
-#
-#      - name: Run vcpkg
-#        uses: lukka/run-vcpkg@v4
-#        with:
-#          vcpkgArguments: 'openssl:x64-windows sqlite3:x64-windows'
-#          vcpkgDirectory: '${{ github.workspace }}/vcpkg'
-#
-#      - name: Create Build Directory
-#        run: mkdir cmake-build-wsl-x64
-#
-#      - name: Build
-#        run: cmake --preset "WSL x64-debug"
-#
-#      - name: Run
-#        run: cmake --build --preset "MinGW x64"
+      - name: Run Cmake with Ninja
+        uses: lukka/run-cmake@main
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}'
+          useVcpkgToolchainFile: true
+#          buildWithCMakeArgs:
