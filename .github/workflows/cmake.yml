@@ -11,58 +11,23 @@ env:
   BUILD_TYPE: Debug
 
 jobs:
-  job:
-    name: ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [
-            windows-latest,
-            ubuntu-latest,
-        ]
-        include:
-          - os: windows-latest
-            triplet: x64-windows
-            vcpkgPackages: 'openssl sqlite3'
-            vcpkgId: 5568f110b509a9fd90711978a7cb76bae75bb092
-          - os: ubuntu-latest
-            triplet: x64-linux
-            vcpkgPackages: 'openssl sqlite3'
-            vcpkgId: 5568f110b509a9fd90711978a7cb76bae75bb092
-
-    env:
-      CMAKE_BUILD_DIR: ${{ github.workspace }}/build/
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-
+  windows:
+    name: Run on Windows latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: true
-
-      - uses: lukka/get-cmake@latest
-
-      - name: Restore vcpkg
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ env.CMAKE_BUILD_DIR }}/vcpkg_installed/
-            ${{ env.VCPKG_ROOT }}
-            !${{ env.VCPKG_ROOT }}/buildtrees
-            !${{ env.VCPKG_ROOT }}/packages
-            !${{ env.VCPKG_ROOT }}/downloads
-
-          key: |
-            ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
-
-      - uses: ilammy/msvc-dev-cmd@v1
-
-      - name: Install dependencies
+      - name: install dependencies
         run: |
-          cmake -S "${{ github.workspace }}" -B "${{ env.CMAKE_BUILD_DIR }}" -GNinja -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
-
-      - run: '${{ env.VCPKG_ROOT }}/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}'
+          choco install cmake
+          cmake --version
+      - name: Run windows.bat
+        run: ./windows.bat
+        shell: pwsh
+      - name: Create Build Directory
+        run: mkdir cmake-build-mingw-x64
 
       - name: Build
-        run: |
-          cmake --build "${{ env.CMAKE_BUILD_DIR }}"
+        run: cmake --preset "MinGW x64-debug"
+
+      - name: Run
+        run: cmake --build --preset "MinGW x64"
