@@ -43,9 +43,8 @@ jobs:
       - name: Restore artifacts / setup vcpkg
         uses: lukka/run-vcpkg@v7
         with:
-          setupOnly: true
           vcpkgGitCommitId: ${{ matrix.vcpkgId }}
-          vcpkhTriplet: ${{ matrix.triplet }}
+          vcpkgTriplet: ${{ matrix.triplet }}
 
       - run: '$VCPKG_ROOT/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}'
 
