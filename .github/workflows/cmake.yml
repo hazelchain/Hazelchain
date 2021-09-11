@@ -24,7 +24,7 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgPackages: 'openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}'
+            vcpkgPackages: 'openssl:x64-windows sqlite3:x64-windows'
             vcpkgId: 5568f110b509a9fd90711978a7cb76bae75bb092
           - os: ubuntu-latest
             triplet: x64-linux
