@@ -43,6 +43,7 @@ jobs:
       - name: Restore artifacts / setup vcpkg
         uses: lukka/run-vcpkg@v7
         with:
+          vcpkgArguments: '@${{ env.VCPKGRESPONSEFILE }}'
           vcpkgGitCommitId: ${{ matrix.vcpkgId }}
           vcpkgTriplet: ${{ matrix.triplet }}
 
