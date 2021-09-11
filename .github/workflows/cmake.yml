@@ -17,17 +17,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [
+            windows-latest,
+            ubuntu-latest,
+          # macos-latest,
+        ]
         include:
           - os: windows-latest
             triplet: x64-windows
           - os: ubuntu-latest
             triplet: x64-linux
-          - os: macos-latest
-            triplet: x64-osx
+    #     - os: macos-latest
+    #       triplet: x64-osx
     env:
-      CMAKE_BUILD_DIR: ${{ github.workspace }}/builddir/
-      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      CMAKE_BUILD_DIR: ${{ github.workspace }}/build/
 
     steps:
       - uses: actions/checkout@v2
@@ -36,35 +39,28 @@ jobs:
 
       - uses: lukka/get-cmake@latest
 
-      - name: Restore vcpkg and its artifacts.
-        uses: actions/cache@v2
+      - name: Restore artifacts / setup vcpkg
+        uses: lukka/run-vcpkg@v7
         with:
-          path: |
-            ${{ env.CMAKE_BUILD_DIR }}/vcpkg_installed/
-            ${{ env.VCPKG_ROOT }}
-            !${{ env.VCPKG_ROOT }}/buildtrees
-            !${{ env.VCPKG_ROOT }}/packages
-            !${{ env.VCPKG_ROOT }}/downloads
-          key: |
-            ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
+          setupOnly: true
 
-      - name: Show content of workspace after cache has been restored
-        run: find $RUNNER_WORKSPACE
-        shell: bash
+      - run: $VCPKG_ROOT/vcpkg install --recurse openssl:${{ matrix.triplet }} sqlite3:${{ matrix.triplet }}
 
-      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Load files
+        run: cmake --preset "MinGW x64-debug"
+        if: matrix.os == 'windows-latest'
 
-      - name: Install dependencies and generate project files
-        run: |
-          cmake -S "${{ github.workspace }}/vcpkg_manifest" -B "${{ env.CMAKE_BUILD_DIR }}" -GNinja -DCMAKE_TOOLCHAIN_FILE="${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake"
+      - name: Load files
+        run: cmake --preset "MinGW x64-debug"
+        if: matrix.os == 'ubuntu-latest'
 
       - name: Build
-        run: |
-          cmake --build "${{ env.CMAKE_BUILD_DIR }}"
+        run: cmake --build --preset "MinGW x64"
+        if: matrix.os == 'windows-latest'
 
-      - name: Show content of workspace at its completion
-        run: find $RUNNER_WORKSPACE
-        shell: bash
+      - name: Build
+        run: cmake --build --preset "MinGW x64"
+        if: matrix.os == 'ubuntu-latest'
 
 #  windows:
 #    name: Run on Windows latest
