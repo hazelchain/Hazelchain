@@ -1,13 +1,10 @@
 # WARNING: not currently developing for linux -- this won't work
 
-echo "Directory: $PWD"
-
-cd ~
-if [ ! -d "dev" ]; then mkdir dev; fi
-cd dev
-if [ ! -d "vcpkg" ]; then git clone https://github.com/Microsoft/vcpkg.git; fi
+if [test -f "vcpkg\vcpkg.exe"]; then
+  git clone https://github.com/Microsoft/vcpkg.git
+fi
 cd vcpkg
 
-./bootstrap-vcpkg.sh -disableMetrics
-call .\vcpkg.exe install openssl
-./vcpkg integrate install
+sh ./bootstrap-vcpkg.sh -disableMetrics
+sh ./vcpkg.exe install --recurse openssl:x64-windows sqlite3:x64-windows
+sh ./vcpkg integrate install

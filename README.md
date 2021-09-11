@@ -8,7 +8,6 @@ A sick crypto that is simple to use and easy to understand whilst having a ton o
 
 1. [Design Goals](#Design-Goals)
 2. [Running](#Running)
-3. [Contributing](#Contributing)
 
 ---
 
@@ -25,7 +24,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ## Running
 
-###### Warning: this was tested on Windows with MinGW-x86, results with other programs may vary
+###### Warning: this was tested on Windows with MinGW-x86 and Ninja, results with other programs may vary
 
 ### Prerequisites:
 
@@ -37,10 +36,13 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ### Steps:
 
-1. download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
-2. extract the contents to an empty folder.
-3. Download mingw x64 from [here](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
-4. Run the bootstrapper (*Keep in mind the files to be downloaded might be large*)
+1. Follow [these](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages) steps to install Ninja
+2. Add Ninja to your path
+3. Download the [zip](https://github.com/Shadow2ube/Hazelchain/archive/refs/heads/master.zip) or clone the repository.
+4. Extract the contents to an empty folder.
+5. Download mingw x64
+   from [here](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
+6. Run the bootstrapper (*Keep in mind the files to be downloaded might be large*)
     - If you're using linux:
         1. Open a bash
         2. Run `linux.sh`
@@ -49,19 +51,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
         2. Open Windows Powershell
         3. Run `windows.bat` in powershell
 
-4. Open and run the project as a Cmake project in your IDE
-5. set the cmake as the directory of your chosen cmake
-6. be sure to set the cmake preset as CMakePresets.json
-
----
-
-## Contributing
-
-In order to contribute to this repository you must do the following:
-
-1. Work on as little files, methods or variables as possible to cut down on collisions
-2. Please don't get mad if we don't merge your PR (there is most likely a reason)
-3. If you spam us in any way for no good reason, you will be banned.
-4. Try not to use boost when possible (trying to phase it out)
+7. Open the project as a Cmake project in your preferred IDE
+8. Set the cmake preset as CMakePresets.json
 
 ---

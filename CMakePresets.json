@@ -10,18 +10,41 @@
       "name": "Base",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake"
       }
     },
     {
+      "inherits": "Base",
       "name": "MinGW x64-debug",
       "displayName": "MinGW",
-      "description": "run cmake in mingw-x64",
-      "generator": "CodeBlocks - MinGW Makefiles",
+      "description": "run cmake in mingw x64",
+      "generator": "Ninja",
       "binaryDir": "${sourceDir}\\cmake-build-mingw-x64",
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "${sourceDir}\\vcpkg\\scripts\\buildsystems\\vcpkg.cmake",
+        "CMAKE_BUILD_TYPE": "Debug",
         "VCPKG_TARGET_TRIPLET": "x64-windows"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "MinGW"
+        }
+      }
+    },
+    {
+      "inherits": "Base",
+      "name": "Ubuntu x64-debug",
+      "displayName": "Ubuntu",
+      "description": "run cmake in linux x64",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}\\cmake-build-ubuntu-x64",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      },
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "WSL"
+        }
       }
     }
   ],
@@ -29,6 +52,10 @@
     {
       "name": "MinGW x64",
       "configurePreset": "MinGW x64-debug"
+    },
+    {
+      "name": "Ubuntu x64",
+      "configurePreset": "WSL x64-debug"
     }
   ]
 }

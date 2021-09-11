@@ -1,0 +1,8 @@
+{
+  "name": "Hazelchain",
+  "version-string": "0.0.1",
+  "dependencies": [
+    "openssl:x64-windows",
+    "sqlite3:x64-windows"
+  ]
+}
