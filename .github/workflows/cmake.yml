@@ -1,6 +1,6 @@
 name: CMake
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -16,6 +16,9 @@ jobs:
         run: |
           choco install cmake
           cmake --version
+
+      - uses: ashutoshvarma/setup-ninja@master
+
       - name: Run windows.bat
         run: ./windows.bat
         shell: pwsh
