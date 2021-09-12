@@ -1,10 +1,6 @@
 name: CMake
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: [ push, pull_request ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
@@ -20,14 +16,17 @@ jobs:
         run: |
           choco install cmake
           cmake --version
+
+      - uses: ashutoshvarma/setup-ninja@master
+
       - name: Run windows.bat
         run: ./windows.bat
         shell: pwsh
       - name: Create Build Directory
         run: mkdir cmake-build-mingw-x64
 
-      - name: Build
+      - name: Generate Directories
         run: cmake --preset "MinGW x64-debug"
 
-      - name: Run
+      - name: Build
         run: cmake --build --preset "MinGW x64"
