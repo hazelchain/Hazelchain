@@ -23,6 +23,8 @@ static Server server;
 
 int main(int argc, char **argv) {
     loadSettings();
+    constants::settings["run_server"] =
+            !util::contains(argc, argv, "-noserver");
     if (!util::contains(argc, argv, "-nosync")) sync();
 
     return 0;
@@ -85,7 +87,8 @@ void sync() {
             << (std::int32_t) constants::settings["server_port"]
             << logger::endl;
 
-//    server.initialize(constants::settings["server_port"]);
+    if (constants::settings["run_server"])
+        server.initialize(constants::settings["server_port"]);
 
     //TODO: implement syncing database to other nodes;
 }
@@ -115,23 +118,5 @@ void generateDir(const char *name) {
 
 int findNodes() {
     int count = 0;
-    {
-        std::vector<int> searched;
-        do {
-            size_t i = std::rand() % constants::settings["nodes"]["fallback"].size() + 1;
-            if (std::find(searched.begin(), searched.end(), i) != searched.end()) continue;
-            // add node if available
-
-        } while (1 == 2); // temporary fix
-    }
-
-    if (!constants::settings["nodes"]["found"].is_null()) {
-        for (auto i = constants::settings["nodes"]["found"].begin();
-             i < constants::settings["nodes"]["found"].end();
-             ++i) {
-            // if connected add to
-            // TODO: connect to all found nodes
-        }
-    }
     return count == 0 ? -1 : count;
 }
