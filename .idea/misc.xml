@@ -8,6 +8,7 @@
     <libraryRoots>
       <file path="$PROJECT_DIR$/libs" />
       <file path="$PROJECT_DIR$/src/libs" />
+      <file path="$PROJECT_DIR$/vcpkg" />
     </libraryRoots>
   </component>
 </project>

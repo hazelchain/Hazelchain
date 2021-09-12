@@ -22,6 +22,7 @@ add_executable(
         src/storage/tree/TransactionTree.h src/storage/tree/TransactionTree.cpp
         src/storage/tree/TransactionNode.h src/storage/tree/TransactionNode.cpp
         src/node/Server.h src/node/Server.cpp
+        src/node/ServerSend.h src/node/ServerRecv.h
         src/node/Packet.h src/node/Packet.cpp
 )
 

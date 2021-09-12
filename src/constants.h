@@ -11,6 +11,7 @@
 
 using json = nlohmann::json;
 
+/* ****************** BAD PRACTICE, PLEASE DON'T DO THIS!! ****************** */
 namespace constants {
     inline static Logger logger(
             util::concat(
