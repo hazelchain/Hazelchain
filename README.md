@@ -48,8 +48,8 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
         2. Run `linux.sh`
 
     - If you're using Windows:
-        2. Open Windows Powershell
-        3. Run `windows.bat` in powershell
+        1. Open Windows Powershell
+        2. Run `windows.bat` in powershell
 
 7. Open the project as a Cmake project in your preferred IDE
 8. Set the cmake preset as CMakePresets.json
