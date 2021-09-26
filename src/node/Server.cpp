@@ -123,12 +123,12 @@ void Server::receive(SOCKET sockfd, int size) const {
               << pack.getId()
               << " (Client Packet)"
               << std::endl;
-    switch ((ClientPackets) pack.getId()) {
-        case welcomeReceived:
-            server::recv::welcomeReceived(pack, sockfd, clients_);
-            for (auto &i: clients_) {
-                std::cout << i.first << std::endl;
-            }
-            break;
-    }
+//    switch ((ClientPacket) pack.getId()) {
+//        case welcomeReceived:
+//            server::recv::welcomeReceived(pack, sockfd, clients_);
+//            for (auto &i: clients_) {
+//                std::cout << i.first << std::endl;
+//            }
+//            break;
+//    }
 }

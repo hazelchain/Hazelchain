@@ -16,10 +16,6 @@ enum Level {
     info
 };
 
-namespace logger {
-    inline std::string endl = "\r\n";
-}
-
 class Logger {
     std::ostream *stream_;
     Level debug_level_ = info;
@@ -39,6 +35,8 @@ public:
     Logger &operator<<(double c);
 
     Logger &operator<<(unsigned long long c);
+
+    Logger &operator<<(std::ostream &(*pManip)(std::ostream &));
 
     friend Logger &log(Logger &logger, Level lvl);
 };

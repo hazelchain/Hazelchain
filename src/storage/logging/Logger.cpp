@@ -3,6 +3,7 @@
 //
 
 #include <utility>
+#include <iostream>
 #include "Logger.h"
 #include "../../util/util.h"
 
@@ -48,6 +49,11 @@ Logger &Logger::operator<<(double c) {
 
 Logger &Logger::operator<<(SOCKET c) {
     *stream_ << c;
+    return *this;
+}
+
+Logger &Logger::operator<<(std::ostream &(*pManip)(std::ostream &)) {
+    *stream_ << pManip;
     return *this;
 }
 

@@ -16,15 +16,15 @@
 #include <cstring>
 
 #define HEADER_SIZE 12
-#define NODE_VERSION 1
+#define PROTOCOL_VERSION 1
 #define INT_SIZE 4
 
-enum ServerPackets {
+enum ServerPacket {
     welcome,
 };
 
-enum ClientPackets {
-    welcomeReceived
+enum ClientPacket {
+    HANDSHAKE
 };
 
 class Packet {
@@ -32,11 +32,22 @@ private:
     std::vector<unsigned char> buffer_;
     unsigned int readPos_ = 0;
     int size_ = -1;
+
 public:
+    using value_t = std::variant<
+            std::string,
+            int,
+            unsigned int,
+            unsigned long,
+            unsigned long long int,
+            float
+    >;
+    using values_t = std::vector<value_t>;
+
     const bool writable_;
     int id;
 
-    explicit Packet(int id_);
+    explicit Packet(int id);
 
     explicit Packet(std::vector<char> in);
 
@@ -99,15 +110,19 @@ public:
 
     std::string readString(bool moveReadPos = true);
 
-    short ReadShort(bool moveReadPos = true);
+    unsigned int readUInt(bool moveReadPos = true);
 
-    int ReadInt(bool moveReadPos = true);
+    unsigned long readULong(bool moveReadPos = true);
 
-    long ReadLong(bool moveReadPos = true);
+    unsigned long long int readULongLong(bool moveReadPos = true);
 
-    float ReadFloat(bool moveReadPos = true);
+    short readShort(bool moveReadPos = true);
 
-    bool ReadBool(bool moveReadPos = true);
+    long readLong(bool moveReadPos = true);
+
+    float readFloat(bool moveReadPos = true);
+
+    bool readBool(bool moveReadPos = true);
 
 // endregion
 
@@ -138,7 +153,7 @@ private:
     }
 
     template<typename T>
-    T _read(bool moveReadPos = true, int rev = 0) {
+    T _read(int rev, bool moveReadPos) {
         unsigned char p[sizeof(T)];
         for (int i = 0; i < sizeof(T); ++i) {
             p[i] = buffer_[i + readPos_ - rev];
