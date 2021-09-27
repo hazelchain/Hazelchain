@@ -43,10 +43,6 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 5. Download mingw x64
    from [here](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/installer/mingw-w64-install.exe/download)
 6. Run the bootstrapper (*Keep in mind the files to be downloaded might be large*)
-    - If you're using linux:
-        1. Open a bash
-        2. Run `linux.sh`
-
         1. Open Windows Powershell
         2. Run `windows.bat` in powershell
 
