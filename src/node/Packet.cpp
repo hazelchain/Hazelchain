@@ -3,19 +3,23 @@
 //
 
 #include "Packet.h"
+#include "../constants.h"
+#include "../storage/logging/Logger.h"
 
 // region Constructors
 
-Packet::Packet(int id_)
-        : writable_(true) {
-    this->operator<<(NODE_VERSION);
-    this->operator<<(id_);
+Packet::Packet(int id)
+        : writable_(true), id(id) {
+    this->operator<<(PROTOCOL_VERSION);
+    this->operator<<(id);
 }
 
 Packet::Packet(std::vector<char> in)
         : writable_(false) {
-    if (NODE_VERSION < _read<int>(in, 0)) {
-        // exception thrown, incompatible versions
+    if (PROTOCOL_VERSION < _read<int>(in, 0)) {
+        log(constants::logger, error)
+                << "Incompatible protocol version"
+                << std::endl;
         return;
     }
 
@@ -184,7 +188,7 @@ unsigned char *Packet::ReadBytes(size_t length, bool moveReadPos) {
 
 std::string Packet::readString(bool moveReadPos) {
     std::string out;
-    int startReadPos = readPos_;
+    unsigned int startReadPos = readPos_;
     if (buffer_.size() > readPos_) {
         while (readPos_ < buffer_.size()) {
             std::string p(&buffer_[readPos_], &buffer_[readPos_] + 4);
@@ -200,6 +204,18 @@ std::string Packet::readString(bool moveReadPos) {
 
     if (!moveReadPos) readPos_ = startReadPos;
     return out;
+}
+
+unsigned int Packet::readUInt(bool moveReadPos) {
+    return _read<unsigned int>();
+}
+
+unsigned long Packet::readULong(bool moveReadPos) {
+    return _read<unsigned long>();
+}
+
+unsigned long long int Packet::readULongLong(bool moveReadPos) {
+    return _read<unsigned long long int>();
 }
 
 // endregion

@@ -8,6 +8,7 @@
 #include <iostream>
 #include "util/util.h"
 #include "util/strutil.h"
+#include "storage/logging/Logger.h"
 
 using json = nlohmann::json;
 

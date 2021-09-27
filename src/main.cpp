@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 void loadSettings() {
     log(constants::logger, info)
             << "Checking for existing settings"
-            << logger::endl;
+            << std::endl;
 
     json target = {
             {"ip", util::getIp()},
@@ -64,7 +64,7 @@ void loadSettings() {
 void sync() {
     log(constants::logger, info)
             << "Generating directories if they don't exist"
-            << logger::endl;
+            << std::endl;
 
     setupDirectories();
 
@@ -72,20 +72,20 @@ void sync() {
     log(constants::logger, info)
             << "Genesis block hash: "
             << gen
-            << logger::endl;
+            << std::endl;
 
     log(constants::logger, info)
             << "Syncing to other nodes"
-            << logger::endl;
+            << std::endl;
 
     log(constants::logger, info)
             << "Indexing and checking blocks"
-            << logger::endl;
+            << std::endl;
 
     log(constants::logger, info)
             << "Starting node server on port "
             << (std::int32_t) constants::settings["server_port"]
-            << logger::endl;
+            << std::endl;
 
     if (constants::settings["run_server"])
         server.initialize(constants::settings["server_port"]);
@@ -105,14 +105,14 @@ void generateDir(const char *name) {
                     << "Could not create folder \""
                     << name
                     << "\""
-                    << logger::endl;
+                    << std::endl;
         }
     } else {
         log(constants::logger, info)
                 << "Directory \""
                 << name
                 << "\" already exists"
-                << logger::endl;
+                << std::endl;
     }
 }
 

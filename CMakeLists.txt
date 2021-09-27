@@ -1,8 +1,11 @@
-cmake_minimum_required(VERSION 3.16.3)
+cmake_minimum_required(VERSION 3.20.0)
 project(Hazelchain)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -static-libstdc++ -static-libgcc")
+
+find_package(Threads REQUIRED)
 find_package(unofficial-sqlite3 REQUIRED)
 find_package(OpenSSL REQUIRED)
 
@@ -24,7 +27,7 @@ add_executable(
         src/node/Server.h src/node/Server.cpp
         src/node/ServerSend.h src/node/ServerRecv.h
         src/node/Packet.h src/node/Packet.cpp
-)
+        src/node/Node.h src/node/Node.cpp)
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
