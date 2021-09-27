@@ -47,7 +47,6 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
         1. Open a bash
         2. Run `linux.sh`
 
-    - If you're using Windows:
         1. Open Windows Powershell
         2. Run `windows.bat` in powershell
 
