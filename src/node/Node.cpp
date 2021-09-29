@@ -5,11 +5,14 @@
 #include "Node.h"
 #include <thread>
 #include <algorithm>
+#include <unistd.h>
 #include "../constants.h"
 #include "../storage/logging/Logger.h"
 #include "ServerSend.h"
 
 void receive(SOCKET sockfd, ClientPacket packets);
+
+void firstZero(int *arr, int size);
 
 void Node::initialize(int port) {
 #ifdef WIN32
@@ -19,7 +22,7 @@ void Node::initialize(int port) {
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
         log(constants::logger, error)
                 << "Failed to load server"
-                << std::endl;;
+                << std::endl;
         exit(1);
     }
 #endif
@@ -42,6 +45,11 @@ void Node::initialize(int port) {
         exit(1);
     }
 
+    for (int i = 0; i < MAX_WORKERS; ++i) {
+        listenerThreads[i] = std::thread(&Node::_handleConnections, this, i);
+        listenerThreads[i].detach();
+    }
+
     start_listening(serverSock_);
 
 #ifdef WIN32
@@ -52,55 +60,90 @@ void Node::initialize(int port) {
 
 void Node::start_listening(SOCKET socket) {
     while (!close_) {
-        SOCKET newsockfd = -1;
+        SOCKET newsockfd;
         struct sockaddr_in cli_addr{};
         int clilen = sizeof(cli_addr);
 
         listen(socket, 5);
+        log(constants::logger, info) << "Waiting for incoming connection" << std::endl;
         if ((newsockfd = accept(socket, (struct sockaddr *) &cli_addr, &clilen)) < 0) {
             log(constants::logger, error)
                     << "Failed to connect to incoming connection"
-                    << std::endl;;
+                    << std::endl;
+        }
+        std::cout << "connected" << std::endl;
+
+        _addToListener(newsockfd);
+    }
+}
+
+void Node::_addToListener(SOCKET socket) {
+    auto[x, y] = util::firstZeroFromMostZeros(incoming_);
+    mtx.lock();
+    incoming_[x][y] = socket;
+    mtx.unlock();
+}
+
+void Node::_handleConnections(int index) {
+    while (true) {
+        FD_SET readfds;
+        FD_ZERO(&readfds);
+        FD_SET(serverSock_, &readfds);
+
+        mtx.lock();
+        if (util::isEmpty(incoming_[index])) {
+            mtx.unlock();
+            continue;
         }
 
-        std::thread t(&Node::_handleConnection, this, newsockfd);
-        t.detach();
-    }
-}
+        for (int i = 0; i < MAX_PER_WORKER; ++i) {
+            SOCKET s = incoming_[index][i];
+            if (s > 0) {
+                FD_SET(s, &readfds);
+            }
+        }
 
-void Node::_handleConnection(SOCKET sockfd) {
-    std::vector<char> buffer(256);
+        int valRead = select(
+                0,
+                &readfds,
+                nullptr,
+                nullptr,
+                nullptr
+        );
 
-    std::function<json(Packet::values_t)> p
-            = [](const Packet::values_t &values) {
-                return json{};
-            };
+        if (valRead < 0) {
+            log(constants::logger, error)
+                    << "select call failed with error"
+                    << std::endl;
+            return;
+        }
 
-    json data = receive(sockfd, [](const Packet::values_t &values) {
-        return json{};
-    }, false);
-}
+        for (int i = 0; i < MAX_PER_WORKER; ++i) {
 
-json Node::receive(SOCKET sockfd,
-                   const std::function<json(Packet::values_t)> &func,
-                   bool includeHeader) const {
-    std::vector<char> buffer(256);
+            SOCKET s = incoming_[index][i];
+            if (FD_ISSET(s, &readfds)) {
+                std::vector<char> buffer(256);
 
-    if (recv(sockfd, &buffer[0], buffer.size(), 0) < 0) {
-        log(constants::logger, error) << "Receive failed" << std::endl;;
-    }
+                int read = recv(s, &buffer[0], buffer.size(), 0);
+                if (read == SOCKET_ERROR) {
+                    log(constants::logger, error)
+                            << "host disconnected unexpectedly" << std::endl;
+                    closesocket(s);
+                    incoming_[index][i] = 0;
+                }
+                if (read == 0) {
+                    printf("Host disconnected");
 
-    Packet::values_t vals;
-    Packet pack(buffer);
-    switch ((ClientPacket) pack.getId()) {
-        case HANDSHAKE:
-            vals.push_back(pack.readUInt());       //  \
-            vals.push_back(pack.readUInt());       //  |
-            vals.push_back(pack.readULongLong());  //  |
-            vals.push_back(pack.readString());     //  | header
-            vals.push_back(pack.readString());     //  |
-            vals.push_back(pack.readULongLong());  //  |
-            vals.push_back(pack.readULong());      //  /
-            break;
+                    closesocket(s);
+
+                    incoming_[index][i] = 0;
+                } else {
+                    std::cout << std::string{buffer.begin(), buffer.end()} << std::endl;
+                    send(s, &buffer[0], buffer.size(), 0);
+                }
+
+            }
+        }
+        mtx.unlock();
     }
 }

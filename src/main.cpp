@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "util/util.h"
 #include "node/Server.h"
+#include "node/Node.h"
 
 #ifdef _WIN32
 #define mkdir(a, b) mkdir(a) // discard 2nd argument on windows
@@ -88,7 +89,7 @@ void sync() {
             << std::endl;
 
     if (constants::settings["run_server"])
-        server.initialize(constants::settings["server_port"]);
+        Node().initialize(constants::settings["server_port"]);
 
     //TODO: implement syncing database to other nodes;
 }
@@ -114,9 +115,4 @@ void generateDir(const char *name) {
                 << "\" already exists"
                 << std::endl;
     }
-}
-
-int findNodes() {
-    int count = 0;
-    return count == 0 ? -1 : count;
 }

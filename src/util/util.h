@@ -7,6 +7,7 @@
 
 #include <dirent.h>
 #include <chrono>
+#include <winsock2.h>
 #include "../Transaction.h"
 #include "../storage/tree/TransactionTree.h"
 #include "../Block.h"
@@ -28,6 +29,15 @@ namespace util {
 
     inline json loadJson(const std::string &file, json target);
 
+    template<size_t S>
+    inline int firstZero(std::array<SOCKET, S> arr, int size);
+
+    template<size_t X, size_t Y>
+    inline std::tuple<int, int> firstZeroFromMostZeros(
+            std::array<std::array<SOCKET, Y>, X> arr);
+
+    template<size_t X, size_t Y>
+    inline bool isEmpty(std::array<std::array<SOCKET, Y>, X> arr);
 
     inline bool exists(const char *in) {
         DIR *t = opendir(in);
@@ -73,7 +83,7 @@ namespace util {
     }
 
     inline bool contains(const std::map<std::string, std::string> &in, const std::string &key) {
-        for (auto &i : in) {
+        for (auto &i: in) {
             if (i.first == key) return true;
         }
         return false;
@@ -85,9 +95,42 @@ namespace util {
             return target;
 
         json current = json::parse(ifs);
-        for (auto&[k, v] : target.items())
+        for (auto&[k, v]: target.items())
             if (current.find(k) == current.end()) current[k] = v;
         return current;
+    }
+
+    template<size_t S>
+    inline int firstZero(std::array<SOCKET, S> arr, int size) {
+        for (int i = 0; i < size; ++i) {
+            if (arr[i] == 0) return i;
+        }
+        return -1;
+    }
+
+    template<size_t X, size_t Y>
+    inline std::tuple<int, int> firstZeroFromMostZeros(
+            std::array<std::array<SOCKET, Y>, X> arr) {
+        int zeros[X] = {0};
+        for (int i = 0; i < X; ++i) {
+            for (int j = 0; j < Y; ++j) {
+                if (arr[i][j] == 0)
+                    ++zeros[i];
+            }
+        }
+        int most = 0;
+        for (int i = 0; i < X; ++i) {
+            if (zeros[i] > zeros[most]) most = i;
+        }
+        return {most, firstZero(arr[most], Y)};
+    }
+
+    template<size_t Y>
+    inline bool isEmpty(std::array<SOCKET, Y> arr) {
+        for (int i = 0; i < Y; ++i) {
+            if (arr[i] != 0) return false;
+        }
+        return true;
     }
 }
 

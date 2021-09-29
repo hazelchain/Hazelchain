@@ -15,39 +15,36 @@
 #include <vector>
 #include <string>
 #include <json.hpp>
+#include <thread>
+#include <mutex>
 #include "Packet.h"
 
-#define MAX_NOT_TEMP 3
 #define PROTOCOL_VERSION 1
+#define MAX_OUTGOING 8
+#define MAX_INCOMING 125
+#define MAX_WORKERS 5
+#define MAX_PER_WORKER MAX_INCOMING / MAX_WORKERS
 
 using json = nlohmann::json;
-
-typedef struct {
-    SOCKET servSock;
-    SOCKET recvSock;
-} node_t;
 
 class Node {
 private:
     bool close_ = false;
+    std::mutex mtx;
     SOCKET serverSock_ = -1;
-    std::vector<node_t> nodes_;
 
-    virtual void _handleConnection(SOCKET sockfd);
+    std::thread listenerThreads[MAX_WORKERS];
+
+    std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> incoming_;
+
+    void _handleConnections(int index);
+
+    void _addToListener(SOCKET socket);
 
 public:
     void initialize(int port);
 
     void start_listening(SOCKET socket);
-
-//    json receive(SOCKET sockfd) const;
-    json receive(SOCKET sockfd,
-                 const std::function<json(Packet::values_t)> &func,
-                 bool includeHeader = true) const;
-
-    static void sendMessage(SOCKET sockfd, const std::string &prompt);
-
-    static void sendData(SOCKET sockfd, Packet packet);
 
 };
 
