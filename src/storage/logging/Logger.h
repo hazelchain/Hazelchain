@@ -8,6 +8,10 @@
 #include <string>
 #include <ostream>
 #include <winsock2.h>
+#include <mutex>
+#include <syncstream>
+#include "../../util/util.h"
+#include "../../util/strutil.h"
 
 enum Level {
     debug,
@@ -16,29 +20,47 @@ enum Level {
     info
 };
 
+inline std::string parseLevel(Level in) {
+    switch (in) {
+        case debug:
+            return "[debug]";
+        case error:
+            return "[error]";
+        case warning:
+            return "[warning]";
+        case info:
+            return "[info]";
+    }
+    return "[info]";
+}
+
 class Logger {
-    std::ostream *stream_;
-    Level debug_level_ = info;
-    std::string location_;
+    std::ostream *stream_ = &std::cout;
+    std::string location_ = util::concat(
+            util::currentTime("[%d-%m-%y  %H:%M:%S] "),
+            "-log.txt"
+    );
 
 public:
-    Logger();
+    Logger() = default;
 
-    Logger(std::string location, std::ostream &stream);
+    Logger(std::string location, std::ostream &stream)
+            : location_(move(location)), stream_(&stream) {
+    }
 
-    Logger &operator<<(const std::string &msg);
+    template<class T>
+    Logger &operator<<(T c) {
+        *stream_ << c;
+        return *this;
+    }
 
-    Logger &operator<<(int c);
-
-    Logger &operator<<(char c);
-
-    Logger &operator<<(double c);
-
-    Logger &operator<<(unsigned long long c);
-
-    Logger &operator<<(std::ostream &(*pManip)(std::ostream &));
-
-    friend Logger &log(Logger &logger, Level lvl);
+    friend std::osyncstream log(Logger &logger, Level lvl) {
+        std::osyncstream oss(*logger.stream_);
+        oss << util::currentTime("[%d:%m:%y  %H:%M:%S] ")
+            << parseLevel(lvl)
+            << " ";
+        return oss;
+    }
 };
 
 

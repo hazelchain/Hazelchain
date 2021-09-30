@@ -54,7 +54,7 @@ void Node::initialize(int port) {
 
 #ifdef WIN32
     WSACleanup();
-    delete &wsa;
+//    delete &wsa;
 #endif
 }
 
@@ -127,7 +127,8 @@ void Node::_handleConnections(int index) {
                 int read = recv(s, &buffer[0], buffer.size(), 0);
                 if (read == SOCKET_ERROR) {
                     log(constants::logger, error)
-                            << "host disconnected unexpectedly" << std::endl;
+                            << "host disconnected unexpectedly"
+                            << std::endl;
                     closesocket(s);
                     incoming_[index][i] = 0;
                 }
@@ -138,10 +139,12 @@ void Node::_handleConnections(int index) {
 
                     incoming_[index][i] = 0;
                 } else {
-                    std::cout << std::string{buffer.begin(), buffer.end()} << std::endl;
+                    log(constants::logger, info)
+                            << "<< "
+                            << std::string{buffer.begin(), buffer.end()}
+                            << std::endl;
                     send(s, &buffer[0], buffer.size(), 0);
                 }
-
             }
         }
         mtx.unlock();

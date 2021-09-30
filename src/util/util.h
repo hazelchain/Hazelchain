@@ -53,18 +53,22 @@ namespace util {
         // TODO: set the timestamp to the day this is released
         return Block(
                 {
-                        Transaction("genesis",
-                                    "christian",
-                                    50000000),
-                        Transaction("genesis",
-                                    "justin",
-                                    50000000),
-                        Transaction("genesis",
-                                    "charity",
-                                    100000000),
-                        Transaction("genesis",
-                                    "dev",
-                                    100000000),
+                        Transaction(
+                                "genesis",
+                                "christian",
+                                50000000),
+                        Transaction(
+                                "genesis",
+                                "justin",
+                                50000000),
+                        Transaction(
+                                "genesis",
+                                "charity",
+                                100000000),
+                        Transaction(
+                                "genesis",
+                                "dev",
+                                100000000),
                 },
                 1222660800
         ).getHash();
@@ -95,7 +99,7 @@ namespace util {
             return target;
 
         json current = json::parse(ifs);
-        for (auto&[k, v]: target.items())
+        for (auto[k, v]: target.items())
             if (current.find(k) == current.end()) current[k] = v;
         return current;
     }
