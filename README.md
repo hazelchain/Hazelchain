@@ -24,7 +24,7 @@ and [proof of stake](https://www.investopedia.com/terms/p/proof-stake-pos.asp)
 
 ## Running
 
-###### Warning: this was tested on Windows with MinGW-x86 and Ninja, results with other programs may vary
+###### Warning: this was tested on Windows with MinGW-x64 and Ninja, results with other programs may vary
 
 ### Prerequisites:
 
