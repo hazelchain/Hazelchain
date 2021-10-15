@@ -10,8 +10,6 @@
 #include "../storage/logging/Logger.h"
 #include "ServerSend.h"
 
-void firstZero(int *arr, int size);
-
 template<size_t X, size_t Y>
 inline std::tuple<int, int> firstZeroFromMostZeros(
         std::array<std::array<SOCKET, Y>, X> arr) {
