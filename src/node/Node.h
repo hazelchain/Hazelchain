@@ -31,30 +31,6 @@
 
 using json = nlohmann::json;
 
-namespace dns {
-    inline std::vector<std::string> getFromDns(const std::string &domain) {
-#ifdef WIN32
-        util::initWSA();
-#endif
-        hostent *h = gethostbyname(domain.c_str());
-        if (h == nullptr)
-            log(constants::logger, error)
-                    << "error: "
-                    << WSAGetLastError()
-                    << std::endl;
-
-        std::vector<std::string> out;
-        auto **addr_list = (struct in_addr **) h->h_addr_list;
-        for (int i = 0; addr_list[i]; ++i) {
-            out.emplace_back(inet_ntoa(*addr_list[i]));
-        }
-#ifdef WIN32
-        WSACleanup();
-#endif
-        return out;
-    }
-}
-
 class Node {
 private:
     struct TCP {
@@ -71,32 +47,31 @@ private:
     TCP tcp = TCP();
     UDP udp = UDP();
     bool stop_ = false;
+    bool initialized_ = false;
+    static Node *instance_;
+
+    Node() = default;
 
     void _handleTcpConnections(int index);
 
     void _addToTcpListenerThread(SOCKET socket);
 
-    void _startListening(SOCKET socket);
+    void _startListeningOnTcp(SOCKET socket);
 
     void _initializeTcp();
 
     void _initializeUdp();
-
-protected:
-    static Node *instance_;
-
-    Node() = default;
 
 public:
     Node(Node &other) = delete;
 
     void operator=(const Node &) = delete;
 
-    static Node &instance();
+    static Node *instance();
 
     void initialize();
 
-    void stop() { stop_ = true; }
+    void stop();
 
 };
 

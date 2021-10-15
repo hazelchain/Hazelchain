@@ -17,6 +17,28 @@ namespace util {
             exit(1);
         }
     }
+
+    inline std::vector<std::string> ipsOf(const std::string &domain) {
+#ifdef WIN32
+        util::initWSA();
+#endif
+        hostent *h = gethostbyname(domain.c_str());
+        if (h == nullptr)
+            log(constants::logger, error)
+                    << "error: "
+                    << WSAGetLastError()
+                    << std::endl;
+
+        std::vector<std::string> out;
+        auto **addr_list = (struct in_addr **) h->h_addr_list;
+        for (int i = 0; addr_list[i]; ++i) {
+            out.emplace_back(inet_ntoa(*addr_list[i]));
+        }
+#ifdef WIN32
+        WSACleanup();
+#endif
+        return out;
+    }
 }
 
 #endif

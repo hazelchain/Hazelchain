@@ -28,6 +28,7 @@ inline std::tuple<int, int> firstZeroFromMostZeros(
 }
 
 void Node::initialize() {
+    if (initialized_) return;
 #ifdef WIN32
     util::initWSA();
 #endif
@@ -35,7 +36,7 @@ void Node::initialize() {
     _initializeUdp();
     _initializeTcp();
 
-    _startListening(tcp.sock_);
+    _startListeningOnTcp(tcp.sock_);
 
 #ifdef WIN32
     WSACleanup();
@@ -43,6 +44,11 @@ void Node::initialize() {
 }
 
 void Node::_initializeTcp() {
+    log(constants::logger, info)
+            << "Starting TCP server on port "
+            << PORT
+            << std::endl;
+
     struct sockaddr_in serv_addr{};
 
     if ((tcp.sock_ = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
@@ -70,10 +76,22 @@ void Node::_initializeTcp() {
 }
 
 void Node::_initializeUdp() {
+    log(constants::logger, info)
+            << "Starting UDP server on port "
+            << PORT
+            << std::endl;
+    std::vector<std::string> ips = util::join(
+            {
+                    util::ipsOf("seeder.unmined.ca")
+            }
+    );
 
+    for (auto &ip: ips) {
+        std::cout << ip << std::endl;
+    }
 }
 
-void Node::_startListening(SOCKET socket) {
+void Node::_startListeningOnTcp(SOCKET socket) {
     while (!stop_) {
         SOCKET newsockfd;
         struct sockaddr_in cli_addr{};
@@ -167,10 +185,19 @@ void Node::_handleTcpConnections(int index) {
     }
 }
 
-Node &Node::instance() {
+Node *Node::instance_ = nullptr;
+
+Node *Node::instance() {
     if (instance_ == nullptr) {
         instance_ = new Node();
-        return *instance_;
+        return instance_;
     }
-    return *instance_;
+    return instance_;
 }
+
+void Node::stop() {
+    stop_ = true;
+    instance_ = nullptr;
+    initialized_ = false;
+}
+

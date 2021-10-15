@@ -115,6 +115,19 @@ namespace util {
         }
         return true;
     }
+
+    template<typename V>
+    inline std::vector<V> join(std::initializer_list<std::vector<V>> vecs) {
+        std::vector<V> total;
+        for (std::vector vec: vecs) {
+            std::vector<V> both;
+            both.reserve(total.size() + vec.size());
+            both.insert(both.end(), total.begin(), total.end());
+            both.insert(both.end(), vec.begin(), vec.end());
+            total = both;
+        }
+        return total;
+    }
 }
 
 #endif //HAZELCHAIN_UTIL_H
