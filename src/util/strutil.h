@@ -6,7 +6,6 @@
 #define HAZELCHAIN_STRUTIL_H
 
 #include <utility>
-
 #include "Math.h"
 
 namespace util {

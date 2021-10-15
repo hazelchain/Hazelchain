@@ -23,6 +23,8 @@ int findNodes();
 static Server server;
 
 int main(int argc, char **argv) {
+    std::vector<std::string> vec = dns::getFromDns("seeder.unmined.ca");
+    return 0;
     loadSettings();
     constants::settings["run_server"] =
             !util::contains(argc, argv, "-noserver");
@@ -88,8 +90,9 @@ void sync() {
             << (std::int32_t) constants::settings["server_port"]
             << std::endl;
 
-    if (constants::settings["run_server"])
-        Node().initialize(constants::settings["server_port"]);
+    if (constants::settings["run_server"]) {
+        Node().initialize();
+    }
 
     //TODO: implement syncing database to other nodes;
 }

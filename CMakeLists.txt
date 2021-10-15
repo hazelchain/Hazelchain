@@ -27,7 +27,7 @@ add_executable(
         src/node/Server.h src/node/Server.cpp
         src/node/ServerSend.h src/node/ServerRecv.h
         src/node/Packet.h src/node/Packet.cpp
-        src/node/Node.h src/node/Node.cpp)
+        src/node/Node.h src/node/Node.cpp src/util/sockutil.h)
 
 if (WIN32)
     target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)

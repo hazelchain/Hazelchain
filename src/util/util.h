@@ -33,10 +33,6 @@ namespace util {
     inline int firstZero(std::array<SOCKET, S> arr, int size);
 
     template<size_t X, size_t Y>
-    inline std::tuple<int, int> firstZeroFromMostZeros(
-            std::array<std::array<SOCKET, Y>, X> arr);
-
-    template<size_t X, size_t Y>
     inline bool isEmpty(std::array<std::array<SOCKET, Y>, X> arr);
 
     inline bool exists(const char *in) {
@@ -110,23 +106,6 @@ namespace util {
             if (arr[i] == 0) return i;
         }
         return -1;
-    }
-
-    template<size_t X, size_t Y>
-    inline std::tuple<int, int> firstZeroFromMostZeros(
-            std::array<std::array<SOCKET, Y>, X> arr) {
-        int zeros[X] = {0};
-        for (int i = 0; i < X; ++i) {
-            for (int j = 0; j < Y; ++j) {
-                if (arr[i][j] == 0)
-                    ++zeros[i];
-            }
-        }
-        int most = 0;
-        for (int i = 0; i < X; ++i) {
-            if (zeros[i] > zeros[most]) most = i;
-        }
-        return {most, firstZero(arr[most], Y)};
     }
 
     template<size_t Y>

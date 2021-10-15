@@ -10,24 +10,44 @@
 #include "../storage/logging/Logger.h"
 #include "ServerSend.h"
 
-void receive(SOCKET sockfd, ClientPacket packets);
-
 void firstZero(int *arr, int size);
 
-void Node::initialize(int port) {
-#ifdef WIN32
-    WSAData wsa{};
-    struct sockaddr_in serv_addr{};
-
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
-        log(constants::logger, error)
-                << "Failed to load server"
-                << std::endl;
-        exit(1);
+template<size_t X, size_t Y>
+inline std::tuple<int, int> firstZeroFromMostZeros(
+        std::array<std::array<SOCKET, Y>, X> arr) {
+    int zeros[X] = {0};
+    for (int i = 0; i < X; ++i) {
+        for (int j = 0; j < Y; ++j) {
+            if (arr[i][j] == 0)
+                ++zeros[i];
+        }
     }
+    int most = 0;
+    for (int i = 0; i < X; ++i) {
+        if (zeros[i] > zeros[most]) most = i;
+    }
+    return {most, util::firstZero(arr[most], Y)};
+}
+
+void Node::initialize() {
+#ifdef WIN32
+    util::initWSA();
 #endif
 
-    if ((serverSock_ = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+    _initializeUdp();
+    _initializeTcp();
+
+    _startListening(tcp.sock_);
+
+#ifdef WIN32
+    WSACleanup();
+#endif
+}
+
+void Node::_initializeTcp() {
+    struct sockaddr_in serv_addr{};
+
+    if ((tcp.sock_ = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
         log(constants::logger, error)
                 << "Failed to initialize socket"
                 << std::endl;;
@@ -36,9 +56,9 @@ void Node::initialize(int port) {
 
     memset((char *) &serv_addr, 0, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
+    serv_addr.sin_port = htons(PORT);
     serv_addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(serverSock_, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+    if (bind(tcp.sock_, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
         log(constants::logger, error)
                 << "Failed to bind socket to address"
                 << std::endl;;
@@ -46,58 +66,56 @@ void Node::initialize(int port) {
     }
 
     for (int i = 0; i < MAX_WORKERS; ++i) {
-        listenerThreads[i] = std::thread(&Node::_handleConnections, this, i);
-        listenerThreads[i].detach();
+        tcp.threads_[i] = std::thread(&Node::_handleTcpConnections, this, i);
+        tcp.threads_[i].detach();
     }
-
-    start_listening(serverSock_);
-
-#ifdef WIN32
-    WSACleanup();
-//    delete &wsa;
-#endif
 }
 
-void Node::start_listening(SOCKET socket) {
-    while (!close_) {
+void Node::_initializeUdp() {
+
+}
+
+void Node::_startListening(SOCKET socket) {
+    while (!stop_) {
         SOCKET newsockfd;
         struct sockaddr_in cli_addr{};
-        int clilen = sizeof(cli_addr);
+        int length = sizeof(cli_addr);
 
         listen(socket, 5);
         log(constants::logger, info) << "Waiting for incoming connection" << std::endl;
-        if ((newsockfd = accept(socket, (struct sockaddr *) &cli_addr, &clilen)) < 0) {
+        if ((newsockfd = accept(socket, (struct sockaddr *) &cli_addr, &length)) < 0) {
             log(constants::logger, error)
                     << "Failed to connect to incoming connection"
                     << std::endl;
+            continue;
         }
         std::cout << "connected" << std::endl;
 
-        _addToListener(newsockfd);
+        _addToTcpListenerThread(newsockfd);
     }
 }
 
-void Node::_addToListener(SOCKET socket) {
-    auto[x, y] = util::firstZeroFromMostZeros(incoming_);
-    mtx.lock();
-    incoming_[x][y] = socket;
-    mtx.unlock();
+void Node::_addToTcpListenerThread(SOCKET socket) {
+    auto[x, y] = firstZeroFromMostZeros(tcp.children_);
+    tcp.mtx.lock();
+    tcp.children_[x][y] = socket;
+    tcp.mtx.unlock();
 }
 
-void Node::_handleConnections(int index) {
+void Node::_handleTcpConnections(int index) {
     while (true) {
         FD_SET readfds;
         FD_ZERO(&readfds);
-        FD_SET(serverSock_, &readfds);
+        FD_SET(tcp.sock_, &readfds);
 
-        mtx.lock();
-        if (util::isEmpty(incoming_[index])) {
-            mtx.unlock();
+        tcp.mtx.lock();
+        if (util::isEmpty(tcp.children_[index])) {
+            tcp.mtx.unlock();
             continue;
         }
 
         for (int i = 0; i < MAX_PER_WORKER; ++i) {
-            SOCKET s = incoming_[index][i];
+            SOCKET s = tcp.children_[index][i];
             if (s > 0) {
                 FD_SET(s, &readfds);
             }
@@ -120,7 +138,7 @@ void Node::_handleConnections(int index) {
 
         for (int i = 0; i < MAX_PER_WORKER; ++i) {
 
-            SOCKET s = incoming_[index][i];
+            SOCKET s = tcp.children_[index][i];
             if (FD_ISSET(s, &readfds)) {
                 std::vector<char> buffer(256);
 
@@ -130,14 +148,14 @@ void Node::_handleConnections(int index) {
                             << "host disconnected unexpectedly"
                             << std::endl;
                     closesocket(s);
-                    incoming_[index][i] = 0;
+                    tcp.children_[index][i] = 0;
                 }
                 if (read == 0) {
                     printf("Host disconnected");
 
                     closesocket(s);
 
-                    incoming_[index][i] = 0;
+                    tcp.children_[index][i] = 0;
                 } else {
                     log(constants::logger, info)
                             << "<< "
@@ -147,6 +165,14 @@ void Node::_handleConnections(int index) {
                 }
             }
         }
-        mtx.unlock();
+        tcp.mtx.unlock();
     }
+}
+
+Node &Node::instance() {
+    if (instance_ == nullptr) {
+        instance_ = new Node();
+        return *instance_;
+    }
+    return *instance_;
 }
