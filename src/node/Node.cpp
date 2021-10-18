@@ -27,6 +27,17 @@ inline std::tuple<int, int> firstZeroFromMostZeros(
     return {most, util::firstZero(arr[most], Y)};
 }
 
+void resolveAddress(const char *name, int family, const char *service, sockaddr_storage *pAddr) {
+    addrinfo *result_list = NULL;
+    addrinfo hints = {};
+    hints.ai_family = family;
+    hints.ai_socktype = SOCK_DGRAM;
+    if (getaddrinfo(name, service, &hints, &result_list) == 0) {
+        memcpy(pAddr, result_list->ai_addr, result_list->ai_addrlen);
+        freeaddrinfo(result_list);
+    }
+}
+
 void Node::initialize() {
     if (initialized_) return;
 #ifdef WIN32
@@ -36,7 +47,16 @@ void Node::initialize() {
     _initializeUdp();
     _initializeTcp();
 
-    _startListeningOnTcp(tcp.sock_);
+    std::vector<std::string> seeds = util::join(
+            {
+                    util::ipsOf("seeder.unmined.ca")
+            }
+    );
+
+    std::thread tcpListener(&Node::_startListeningOnTcp, this);
+    // initialize udp listener here
+    tcpListener.join();
+    // join udp listener here
 
 #ifdef WIN32
     WSACleanup();
@@ -49,20 +69,18 @@ void Node::_initializeTcp() {
             << PORT
             << std::endl;
 
-    struct sockaddr_in serv_addr{};
-
-    if ((tcp.sock_ = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
+    if ((tcp.sock = socket(AF_INET, SOCK_STREAM, 0)) == INVALID_SOCKET) {
         log(constants::logger, error)
                 << "Failed to initialize socket"
-                << std::endl;;
+                << std::endl;
         exit(1);
     }
 
-    memset((char *) &serv_addr, 0, sizeof(serv_addr));
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(PORT);
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-    if (bind(tcp.sock_, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
+    memset((char *) &tcp.address, 0, sizeof(tcp.address));
+    tcp.address.sin_family = AF_INET;
+    tcp.address.sin_port = htons(PORT);
+    tcp.address.sin_addr.s_addr = INADDR_ANY;
+    if (bind(tcp.sock, (struct sockaddr *) &tcp.address, sizeof(tcp.address)) < 0) {
         log(constants::logger, error)
                 << "Failed to bind socket to address"
                 << std::endl;;
@@ -70,8 +88,8 @@ void Node::_initializeTcp() {
     }
 
     for (int i = 0; i < MAX_WORKERS; ++i) {
-        tcp.threads_[i] = std::thread(&Node::_handleTcpConnections, this, i);
-        tcp.threads_[i].detach();
+        tcp.threads[i] = std::thread(&Node::_handleTcpConnections, this, i);
+        tcp.threads[i].detach();
     }
 }
 
@@ -80,26 +98,40 @@ void Node::_initializeUdp() {
             << "Starting UDP server on port "
             << PORT
             << std::endl;
-    std::vector<std::string> ips = util::join(
-            {
-                    util::ipsOf("seeder.unmined.ca")
-            }
-    );
 
-    for (auto &ip: ips) {
-        std::cout << ip << std::endl;
+    if ((udp.sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        log(constants::logger, error)
+                << "failed to create UDP socket"
+                << std::endl;
+        exit(1);
     }
+
+    memset(&udp.address, 0, sizeof(udp.address));
+    udp.address.sin_family = AF_INET;
+    udp.address.sin_port = htons(PORT);
+    udp.address.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(udp.sock, (struct sockaddr *) &udp.address, sizeof(udp.address)) < 0) {
+        log(constants::logger, error)
+                << "UDP bind failed"
+                << std::endl;
+        exit(1);
+    }
+
+//    for (auto &ip: ips) {
+//        std::cout << ip << std::endl;
+//    }
 }
 
-void Node::_startListeningOnTcp(SOCKET socket) {
+void Node::_startListeningOnTcp() {
     while (!stop_) {
         SOCKET newsockfd;
         struct sockaddr_in cli_addr{};
         int length = sizeof(cli_addr);
 
-        listen(socket, 5);
+        listen(tcp.sock, 5);
         log(constants::logger, info) << "Waiting for incoming connection" << std::endl;
-        if ((newsockfd = accept(socket, (struct sockaddr *) &cli_addr, &length)) < 0) {
+        if ((newsockfd = accept(tcp.sock, (struct sockaddr *) &cli_addr, &length)) < 0) {
             log(constants::logger, error)
                     << "Failed to connect to incoming connection"
                     << std::endl;
@@ -112,9 +144,9 @@ void Node::_startListeningOnTcp(SOCKET socket) {
 }
 
 void Node::_addToTcpListenerThread(SOCKET socket) {
-    auto[x, y] = firstZeroFromMostZeros(tcp.children_);
+    auto[x, y] = firstZeroFromMostZeros(tcp.children);
     tcp.mtx.lock();
-    tcp.children_[x][y] = socket;
+    tcp.children[x][y] = socket;
     tcp.mtx.unlock();
 }
 
@@ -122,16 +154,16 @@ void Node::_handleTcpConnections(int index) {
     while (true) {
         FD_SET readfds;
         FD_ZERO(&readfds);
-        FD_SET(tcp.sock_, &readfds);
+        FD_SET(tcp.sock, &readfds);
 
         tcp.mtx.lock();
-        if (util::isEmpty(tcp.children_[index])) {
+        if (util::isEmpty(tcp.children[index])) {
             tcp.mtx.unlock();
             continue;
         }
 
         for (int i = 0; i < MAX_PER_WORKER; ++i) {
-            SOCKET s = tcp.children_[index][i];
+            SOCKET s = tcp.children[index][i];
             if (s > 0) {
                 FD_SET(s, &readfds);
             }
@@ -154,7 +186,7 @@ void Node::_handleTcpConnections(int index) {
 
         for (int i = 0; i < MAX_PER_WORKER; ++i) {
 
-            SOCKET s = tcp.children_[index][i];
+            SOCKET s = tcp.children[index][i];
             if (FD_ISSET(s, &readfds)) {
                 std::vector<char> buffer(256);
 
@@ -164,14 +196,14 @@ void Node::_handleTcpConnections(int index) {
                             << "host disconnected unexpectedly"
                             << std::endl;
                     closesocket(s);
-                    tcp.children_[index][i] = 0;
+                    tcp.children[index][i] = 0;
                 }
                 if (read == 0) {
                     printf("Host disconnected");
 
                     closesocket(s);
 
-                    tcp.children_[index][i] = 0;
+                    tcp.children[index][i] = 0;
                 } else {
                     log(constants::logger, info)
                             << "<< "
@@ -201,3 +233,35 @@ void Node::stop() {
     initialized_ = false;
 }
 
+void Node::sendTo(std::tuple<std::string, int> addr, char *data) {
+    sockaddr_storage dest;
+    resolveAddress(
+            std::get<0>(addr).c_str(),
+            AF_INET,
+            util::to_string(std::get<1>(addr)).c_str(),
+            &dest
+    );
+
+    sendto(instance_->udp.sock, data, strlen(data), 0, (sockaddr *) &dest, sizeof(dest));
+}
+
+std::tuple<std::vector<char>, std::tuple<std::string, int>> Node::recvFrom(int size) {
+    std::vector<char> buffer(size);
+    struct sockaddr_in addrOut;
+    int addrOut_size = sizeof(addrOut_size);
+    recvfrom(
+            instance_->udp.sock,
+            &buffer[0],
+            buffer.size(),
+            0,
+            (struct sockaddr *) &addrOut,
+            &addrOut_size
+    );
+
+    for (char v: buffer) {
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << v << " ";
+    }
+    std::cout << std::endl;
+
+    return {buffer, {inet_ntoa(addrOut.sin_addr), addrOut.sin_port}};
+}

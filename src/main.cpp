@@ -68,6 +68,17 @@ void sync() {
     log(constants::logger, info) << "Indexing and checking blocks" << std::endl;
 
     Node::instance()->initialize();
+    Node::sendTo({"10.0.0.139", 10541}, "yeet");
+    std::tuple<std::vector<char>, std::tuple<std::string, int>> p = Node::recvFrom(512);
+
+    for (auto i: std::get<0>(p)) {
+        std::cout << i << " " << std::endl;
+    }
+    std::cout << std::endl;
+
+    std::cout << std::get<0>(std::get<1>(p)) << std::endl;
+    std::cout << std::get<1>(std::get<1>(p)) << std::endl;
+    std::cout << "test" << std::endl;
 
     //TODO: implement syncing database to other nodes;
 }

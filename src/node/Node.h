@@ -35,19 +35,22 @@ class Node {
 private:
     struct TCP {
         std::mutex mtx;
-        SOCKET sock_ = -1;
-        std::thread threads_[MAX_WORKERS];
-        std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> children_ = {{0}};
+        SOCKET sock = -1;
+        struct sockaddr_in address{};
+        std::thread threads[MAX_WORKERS];
+        std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> children = {{0}};
     };
 
     struct UDP {
-        SOCKET sock_ = -1;
+        SOCKET sock = -1;
+        struct sockaddr_in address{};
     };
 
     TCP tcp = TCP();
     UDP udp = UDP();
     bool stop_ = false;
     bool initialized_ = false;
+
     static Node *instance_;
 
     Node() = default;
@@ -56,13 +59,15 @@ private:
 
     void _addToTcpListenerThread(SOCKET socket);
 
-    void _startListeningOnTcp(SOCKET socket);
+    void _startListeningOnTcp();
 
     void _initializeTcp();
 
     void _initializeUdp();
 
 public:
+    using address = std::tuple<std::string, int>;
+
     Node(Node &other) = delete;
 
     void operator=(const Node &) = delete;
@@ -70,6 +75,10 @@ public:
     static Node *instance();
 
     void initialize();
+
+    static void sendTo(address addr, char *data);
+
+    static std::tuple<std::vector<char>, std::tuple<std::string, int>> recvFrom(int size);
 
     void stop();
 
