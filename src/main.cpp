@@ -20,11 +20,9 @@ void generateDir(const char *name);
 
 int findNodes();
 
-static Server server;
-
 int main(int argc, char **argv) {
     loadSettings();
-    sync();
+    Node::instance()->initialize();
 
     return 0;
 }

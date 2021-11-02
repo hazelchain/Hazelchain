@@ -117,10 +117,6 @@ void Node::_initializeUdp() {
                 << std::endl;
         exit(1);
     }
-
-//    for (auto &ip: ips) {
-//        std::cout << ip << std::endl;
-//    }
 }
 
 void Node::_startListeningOnTcp() {
@@ -197,8 +193,7 @@ void Node::_handleTcpConnections(int index) {
                             << std::endl;
                     closesocket(s);
                     tcp.children[index][i] = 0;
-                }
-                if (read == 0) {
+                } else if (read == 0) {
                     printf("Host disconnected");
 
                     closesocket(s);
@@ -245,7 +240,7 @@ void Node::sendTo(std::tuple<std::string, int> addr, char *data) {
     sendto(instance_->udp.sock, data, strlen(data), 0, (sockaddr *) &dest, sizeof(dest));
 }
 
-std::tuple<std::vector<char>, std::tuple<std::string, int>> Node::recvFrom(int size) {
+std::tuple<std::vector<char>, Node::address> Node::recvFrom(int size) {
     std::vector<char> buffer(size);
     struct sockaddr_in addrOut;
     int addrOut_size = sizeof(addrOut_size);

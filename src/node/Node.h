@@ -37,8 +37,9 @@ private:
         std::mutex mtx;
         SOCKET sock = -1;
         struct sockaddr_in address{};
+        std::thread listener;
         std::thread threads[MAX_WORKERS];
-        std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> children = {{0}};
+        std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> children{};
     };
 
     struct UDP {
