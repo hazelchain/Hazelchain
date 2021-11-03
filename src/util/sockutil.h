@@ -12,7 +12,8 @@ namespace util {
         WSAData wsa{};
         if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) {
             log(constants::logger, error)
-                    << "Failed to load server"
+                    << "Failed to load server: "
+                    << WSAGetLastError
                     << std::endl;
             exit(1);
         }
@@ -23,11 +24,14 @@ namespace util {
         util::initWSA();
 #endif
         hostent *h = gethostbyname(domain.c_str());
-        if (h == nullptr)
+        if (h == nullptr) {
             log(constants::logger, error)
-                    << "error: "
+                    << "could not get ips from "
+                    << domain
+                    << ": "
                     << WSAGetLastError()
                     << std::endl;
+        }
 
         std::vector<std::string> out;
         auto **addr_list = (struct in_addr **) h->h_addr_list;

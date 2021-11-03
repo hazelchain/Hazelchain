@@ -45,7 +45,8 @@ std::string Block::hash() {
     ss << tTime_ << sStateHash << sTxRoot;
     for (const std::string &t : transactions->hashVector()) ss << t;
     ss << sPrevHash;
-    return sHash_ = util::sha256(ss.str());
+//    return sHash_ = util::sha256(ss.str());
+    return "no";
 }
 
 void Block::save() {

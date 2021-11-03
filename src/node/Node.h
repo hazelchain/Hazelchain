@@ -33,13 +33,19 @@ using json = nlohmann::json;
 
 class Node {
 private:
+    std::vector<std::string> seeds = util::join(
+            {
+                    util::ipsOf("seeder.unmined.ca")
+            }
+    );
+
     struct TCP {
         std::mutex mtx;
         SOCKET sock = -1;
         struct sockaddr_in address{};
         std::thread listener;
         std::thread threads[MAX_WORKERS];
-        std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> children{};
+        std::array<std::array<SOCKET, MAX_PER_WORKER>, MAX_WORKERS> children = {{0}};
     };
 
     struct UDP {

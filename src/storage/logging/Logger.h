@@ -30,11 +30,13 @@ inline std::string parseLevel(Level in) {
             return "[warning]";
         case info:
             return "[info]";
+        default:
+            return "[info]";
     }
-    return "[info]";
 }
 
 class Logger {
+    static std::mutex mtx_;
     std::ostream *stream_ = &std::cout;
     std::string location_ = util::concat(
             util::currentTime("[%d-%m-%y  %H:%M:%S] "),
@@ -50,7 +52,9 @@ public:
 
     template<class T>
     Logger &operator<<(T c) {
+//        mtx_.lock();
         *stream_ << c;
+//        mtx_.unlock();
         return *this;
     }
 

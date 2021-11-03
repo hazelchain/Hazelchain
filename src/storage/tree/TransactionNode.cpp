@@ -26,5 +26,5 @@ void TransactionNode::Hash() {
     ss << tData.dump();
     if (left) ss << left->sHash;
     if (right) ss << right->sHash;
-    this->sHash = util::sha256(ss.str());
+//    this->sHash = util::sha256(ss.str());
 }

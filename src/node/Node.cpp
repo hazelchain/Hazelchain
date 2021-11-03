@@ -6,8 +6,6 @@
 #include <thread>
 #include <algorithm>
 #include <unistd.h>
-#include "../constants.h"
-#include "../storage/logging/Logger.h"
 #include "ServerSend.h"
 
 template<size_t X, size_t Y>
@@ -28,7 +26,7 @@ inline std::tuple<int, int> firstZeroFromMostZeros(
 }
 
 void resolveAddress(const char *name, int family, const char *service, sockaddr_storage *pAddr) {
-    addrinfo *result_list = NULL;
+    addrinfo *result_list = nullptr;
     addrinfo hints = {};
     hints.ai_family = family;
     hints.ai_socktype = SOCK_DGRAM;
@@ -40,23 +38,20 @@ void resolveAddress(const char *name, int family, const char *service, sockaddr_
 
 void Node::initialize() {
     if (initialized_) return;
+    initialized_ = true;
 #ifdef WIN32
     util::initWSA();
 #endif
+    std::cout << "a" << std::endl;
 
     _initializeUdp();
+    std::cout << "b" << std::endl;
     _initializeTcp();
+    std::cout << "c" << std::endl;
 
-    std::vector<std::string> seeds = util::join(
-            {
-                    util::ipsOf("seeder.unmined.ca")
-            }
-    );
-
-    std::thread tcpListener(&Node::_startListeningOnTcp, this);
+    tcp.listener = std::thread(&Node::_startListeningOnTcp, this);
+    std::cout << "d" << std::endl;
     // initialize udp listener here
-    tcpListener.join();
-    // join udp listener here
 
 #ifdef WIN32
     WSACleanup();
@@ -133,7 +128,7 @@ void Node::_startListeningOnTcp() {
                     << std::endl;
             continue;
         }
-        std::cout << "connected" << std::endl;
+        log(constants::logger, info) << "connected" << std::endl;
 
         _addToTcpListenerThread(newsockfd);
     }
@@ -147,7 +142,7 @@ void Node::_addToTcpListenerThread(SOCKET socket) {
 }
 
 void Node::_handleTcpConnections(int index) {
-    while (true) {
+    while (!stop_) {
         FD_SET readfds;
         FD_ZERO(&readfds);
         FD_SET(tcp.sock, &readfds);
@@ -254,9 +249,9 @@ std::tuple<std::vector<char>, Node::address> Node::recvFrom(int size) {
     );
 
     for (char v: buffer) {
-        std::cout << std::hex << std::setw(2) << std::setfill('0') << v << " ";
+        log(constants::logger, info) << std::hex << std::setw(2) << std::setfill('0') << v << " ";
     }
-    std::cout << std::endl;
+    log(constants::logger, info) << std::endl;
 
     return {buffer, {inet_ntoa(addrOut.sin_addr), addrOut.sin_port}};
 }

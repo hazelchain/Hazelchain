@@ -60,7 +60,7 @@ std::string TransactionTree::_hash(TransactionNode *node) {
     ss << node->tData.dump();
     if (node->left) ss << _hash(node->left);
     if (node->right) ss << _hash(node->right);
-    node->sHash = util::sha256(ss.str());
+//    node->sHash = util::sha256(ss.str());
     return node->sHash;
 }
 

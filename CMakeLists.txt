@@ -6,8 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -static-libstdc++ -static-libgcc")
 
 find_package(Threads REQUIRED)
-find_package(unofficial-sqlite3 REQUIRED)
-find_package(OpenSSL REQUIRED)
+#find_package(OpenSSL REQUIRED)
 
 add_executable(
         ${PROJECT_NAME}
@@ -33,15 +32,13 @@ if (WIN32)
     target_link_libraries(${PROJECT_NAME} wsock32 ws2_32)
 endif ()
 
-target_link_libraries(
-        ${PROJECT_NAME}
-        unofficial::sqlite3::sqlite3
-        OpenSSL::SSL OpenSSL::Crypto
-)
+#target_link_libraries(
+#        ${PROJECT_NAME}
+#        OpenSSL::SSL OpenSSL::Crypto
+#)
 
 include_directories(
         libs/json
-        libs/sha256
 )
 
 message(STATUS "Done!")
